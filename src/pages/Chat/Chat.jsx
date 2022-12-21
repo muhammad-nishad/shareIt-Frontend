@@ -51,7 +51,7 @@ export default function Chat() {
         const getChats = async () => {
             axios.get(`${process.env.REACT_APP_BACKEND_URL}/chat/${user._id}`).then(({ data }) => {
                 setChats(data)
-                console.log(data, 'response');
+        
             })
         }
         getChats()
