@@ -9,37 +9,30 @@ import Followers from "../../components/Followers/Followers";
 
 export default function Community() {
     const [user, setUser] = useState([])
-    const [people, setPeople] = useState(false)
-    const [following, setFollowing] = useState(false)
-    const [followers, setFollowers] = useState(false)
+    
+    const [people, setPeople] = useState("following")
     return (
         <>
             <div >
                 <div style={{ width: "55vw", paddingTop: 25, display: "flex", justifyContent: "center", gap: 10 }}>
                     <Button onClick={() => {
-                        setFollowers((prev) =>
-                            !prev
-                        )
+                        setPeople("followers")
                     }} variant="contained" >Followers</Button>
                     <Button onClick={() => {
-                        setFollowing((prev) =>
-                            !prev
-                        )
+                        setPeople("following")
                     }} variant="contained">Following</Button>
                     <Button onClick={() => {
-                        setPeople((prev) =>
-                            !prev
-                        )
+                        setPeople("people")
                     }} variant="contained">People You May Know</Button>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-around" }} >
-                    {people && <People />}
+                    {people==="people" && <People/>}
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
-                    {following && <Following following={following} />}
+                    {people==="following" && <Following/>}
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-around" }}>
-                    {followers && <Followers followers={followers} />}
+                    {people==="followers" && <Followers/>}
                 </div>
             </div>
             {/* <Box flex={4} >

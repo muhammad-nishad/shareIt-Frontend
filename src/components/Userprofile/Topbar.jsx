@@ -20,33 +20,33 @@ const style = {
     height: 300,
     borderRadius: 5,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '1px solid #000',
     boxShadow: 24,
     p: 4,
+
 };
 
 export default function Topbar({ id, profile, post, following, setFollowing }) {
     const { user } = useSelector(state => ({ ...state }))
     const navigate = useNavigate()
     let tokenData = Cookies.get('user')
-    // console.log(profile, 'profile');
     tokenData = JSON.parse(tokenData)
     const refresh = useSelector((state) => state.user.refresh)
     const { token } = tokenData
     const dispatch = useDispatch()
-    // const [user, setUser] = useState({})
-    const [posts, setPosts] = useState([])
-    const [modal, setModal] = useState(false)
-    const [follow, setFollow] = useState(false)
     const [open, setOpen] = React.useState(false);
+    const [open2, setOpen2] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const handleOpen2 = () => setOpen2(true);
+    const handleClose2 = () => setOpen2(false);
     const [image, setImage] = useState()
     const [editData, setEditData] = useState({})
     useEffect(() => setEditData({ firstName: profile?.first_name, lastName: profile?.last_name }), [profile])
     const uploadImage = () => {
         const formData = new FormData()
         formData.append("file", image)
+        console.log(formData, 'formdata');
         formData.append("upload_preset", "kacy6ucl")
         axios.post("https://api.cloudinary.com/v1_1/dl0nkbe8b/image/upload", formData).then((response) => {
             const img = response.data.url
@@ -62,7 +62,6 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/follow`, { userid: id }, { headers: { token: token } }).then((data) => {
             setFollowing(prev => !prev)
             dispatch({ type: 'REFRESH' })
-            // dispatch({ type: 'LOGIN' })
         })
     }
 
@@ -86,9 +85,7 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
         followUser()
 
     }, [])
-    const [open2, setOpen2] = React.useState(false);
-    const handleOpen2 = () => setOpen(true);
-    const handleClose2 = () => setOpen(false);
+
 
 
     return (
@@ -113,19 +110,33 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
                                 aria-describedby="modal-modal-description"
                             >
                                 <Box sx={style}>
-                                    <Button variant="contained" component="label">
-                                        Upload
-                                        <input onChange={(e) => {
-                                            setImage(e.target.files[0]);
-                                        }} hidden accept="image/*" type="file" />
-                                    </Button>
-                                    <IconButton color="primary" aria-label="upload picture" component="label">
-                                        <input hidden accept="image/*" type="file"
-                                        />
-                                    </IconButton>
-                                    <Button onClick={uploadImage} variant="contained" endIcon={<SendIcon />}>
-                                        Send
-                                    </Button>
+                                    <div className='profile'>
+                                        <h4 style={{ display: "flex", justifyContent: "center" }}  >Change Profile Photo</h4>
+                                        <hr />
+                                        <div style={{ display: "flex", justifyContent: "space-evenly" }} >
+ 
+                                            <label  style={{cursor:"pointer"}} htmlFor="profileInp">choose from your library </label>
+                                            <input hidden id='profileInp' onChange={(e) => {
+                                                setImage(e.target.files[0]);
+                                            }} accept="image/*" type="file" />
+
+                                            <div>
+
+                                            <button onClick={uploadImage}
+                                                style={{ color: 'rgb(71, 175, 255)', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} > Upload
+                                            </button>
+                                            </div>
+
+                                        </div>
+                                        <hr />
+                                        <div style={{ display: "flex", justifyContent: "center" }} >
+                                            <button style={{ color: 'red', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} >Remove Current Photo</button>
+                                        </div>
+                                        <hr />
+                                        <div style={{ display: "flex", justifyContent: "center" }} >
+                                            <button onClick={handleClose}  style={{ height: "34px", color: 'black', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} >Cancel</button>
+                                        </div>
+                                    </div>
                                 </Box>
                             </Modal>
                             : null
@@ -159,7 +170,7 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
                         user?._id == profile?._id ?
 
                             <Modal
-                                open={open}
+                                open={open2}
                                 onClose={handleClose2}
                                 aria-labelledby="modal-modal-title"
                                 aria-describedby="modal-modal-description"

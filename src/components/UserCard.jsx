@@ -4,17 +4,15 @@ import Cookies from 'js-cookie';
 import React, { useState } from 'react'
 import { useEffect } from 'react';
 
-function UserCard({ data }) {
-    console.log(data,'props');
+function UserCard({ data, type }) {
+    console.log(data, 'props');
     const [users, setUsers] = useState()
     let tokenData = Cookies.get('user')
     tokenData = JSON.parse(tokenData)
     const { token } = tokenData
-    const [follow,setFollow]=useState(false)
-
+    const [follow, setFollow] = useState(type)
     const unfollowUser = async (id) => {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/unfollow`, { userid: id }, { headers: { token: token } }).then((response) => {
-            // setUnfollow(true)
             console.log(response);
         })
     }
@@ -24,16 +22,13 @@ function UserCard({ data }) {
             // setUsers(response.data)
         })
     }
-
-    const followuser=async(id)=>{
+    const followuser = async (id) => {
+        console.log(id, 'follwoing id');
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/follow`, { userid: id }, { headers: { token: token } }).then((response) => {
-            console.log(response,'response');
-            // setFollow(true)
-            setFollow(true)
+            console.log(response, 'response');
         })
-
     }
-   
+
 
 
 
@@ -47,9 +42,9 @@ function UserCard({ data }) {
             <div style={{ border: "0px solid black", display: "flex", alignItems: "center", flexDirection: "column", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2) 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
 
                 {
-                    data?.profilePicture ? <img style={{ maxWidth: "8vw", height:"25vh" ,borderRadius: 20,objectFit:'cover' }} src={data.profilePicture} /> : 
+                    data?.profilePicture ? <img style={{ maxWidth: "8vw", height: "25vh", borderRadius: 20, objectFit: 'cover' }} src={data.profilePicture} /> :
 
-                <img style={{ maxWidth: "8vw", height:'20vh',   borderRadius: 20 }} src='icons/blankprofile.webp' />
+                        <img style={{ maxWidth: "8vw", height: '20vh', borderRadius: 20 }} src='icons/blankprofile.webp' />
                 }
                 <div style={{ marginTop: 10 }}>
 
@@ -58,26 +53,22 @@ function UserCard({ data }) {
                     }
                 </div>
                 {
-                    !follow ?
+                    follow === "follow" ?
+                        <Button style={{ display: "flex", paddingTop: 10 }} onClick={() => {
+                            followuser(data._id);
+                            setFollow("following")
+                            // setUnfollow(false)
+                        }} variant="contained" >Follow</Button>
+                        :
+                        follow === "following" ?
+                            <Button onClick={() => {
+                                unfollowUser(data._id);
+                                setFollow("follow")
 
-                    
-                    
-                    <Button style={{ display: "flex", paddingTop: 10 }} onClick={() => {
-                        followuser(data._id);
-                        setFollow(true)
-                        // setUnfollow(false)
-                    }} variant="contained" >Follow</Button>
-                    :
-                        
-                        <Button onClick={() =>{
-                            unfollowUser(data._id);
-                            setFollow(false)
-                            
-                        }}
-                        variant="contained" >Unfollow</Button>
-                    }
-
-                
+                            }}
+                                variant="contained" >Unfollow</Button>
+                            : ""
+                }
             </div>
 
         </div>

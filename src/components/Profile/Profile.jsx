@@ -6,6 +6,7 @@ import Navbar from '../Navbar/Navbar'
 import Post from '../Post/Post'
 import Sidebar from '../Sidebar/Sidebar'
 import Topbar from '../Userprofile/Topbar'
+import './style.css'
 
 export default function Profile({id , own}) {
   const [{ posts }, dispatch] = useReducer(postsReducer, { posts: [] })
@@ -23,7 +24,6 @@ export default function Profile({id , own}) {
       console.log(data, 'getuserprofile');
       dispatch({ type: 'REFRESH' })
       setProfile(data.user)
-      console.log(data.user,'userrr1111');
       setPosts(data.post)
       dispatch({
         type: "POSTS_SUCCESS",

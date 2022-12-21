@@ -25,9 +25,8 @@ const UserBox = styled(Box)({
 })
 
 function Add({ dispatch }) {
-    let token1 = Cookies.get('user')
-    token1 = JSON.parse(token1)
-    const { token } = token1
+    const { user } = useSelector(state => ({ ...state }))
+    const { token } = user
 
     const upload=()=>{
         if(imageSelected){
@@ -71,7 +70,6 @@ function Add({ dispatch }) {
         }
 
     };
-    const { user } = useSelector(state => ({ ...state }))
     const value = useSelector((state) => {
         return state;
 

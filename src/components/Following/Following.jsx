@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import UserCard from '../UserCard'
 import { useDispatch, useSelector } from 'react-redux'
 
-export default function Following({ Following }) {
+export default function Following({ }) {
   const [user,setUser]=useState()
   let tokenData = Cookies.get('user')
 
@@ -14,13 +14,13 @@ export default function Following({ Following }) {
   const dispatch = useDispatch()
 
 
-   const followUser = async (id) => {
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/follow`, { userid: id }, { headers: { token: token } }).then((response) => {
-            console.log(response,'follow2222');
-            dispatch({ type: 'REFRESH' })
-            // setFollow(true)
-        })
-    }
+  //  const followUser = async (id) => {
+  //       axios.post(`${process.env.REACT_APP_BACKEND_URL}/follow`, { userid: id }, { headers: { token: token } }).then((response) => {
+  //           console.log(response,'follow2222');
+  //           dispatch({ type: 'REFRESH' })
+  //           // setFollow(true)
+  //       })
+  //   }
 
     const getAllFollowing = async (id) => {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/getallFollowing`, { headers: { token: token } }).then((response) => {
@@ -46,7 +46,7 @@ export default function Following({ Following }) {
 
       {
       user && user.following.map((user)=>(
-        <UserCard  data={user}  />
+        <UserCard  data={user} type="following" />
       ))
     }
 

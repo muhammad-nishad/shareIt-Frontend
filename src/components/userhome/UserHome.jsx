@@ -26,9 +26,8 @@ function UserHome() {
       mode: mode
     }
   })
-  useEffect(() => { console.log(posts) }, [posts])
   return (
-    <ThemeProvider theme={darkTheme} color={'text.white'}>
+    <ThemeProvider theme={darkTheme}>
       <Box bgcolor={'background.default'}>
         <Navbar />
         <Stack direction='row' spacing={2} justifyContent='space-between'>
@@ -39,10 +38,6 @@ function UserHome() {
           <Rightbar />
         </Stack>
         <Add dispatch={dispatch} />
-        {
-          false && <h1>iam a alert</h1>
-        }
-
       </Box>
     </ThemeProvider>
   )

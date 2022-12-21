@@ -11,7 +11,7 @@ export default function People() {
     const { token } = tokenData
 
     const [users, setUsers] = useState([])
-    const [follow,setFollow]=useState(false)
+    // const [follow,setFollow]=useState(false)
     
     // const followUser = async (id) => {
     //     axios.post(`${process.env.REACT_APP_BACKEND_URL}/follow`, { userid: id }, { headers: { token: token } }).then((response) => {
@@ -38,7 +38,7 @@ export default function People() {
         <>
          {
             users?.map((data) =>(
-                <UserCard  people  data={data} />
+                <UserCard type="follow" data={data} />
             )
                 // <div style={{ width: "10vw", display: "flex", paddingTop: 25, paddingLeft: 30, gap: 12 }}>
                 //     <div style={{ border: "1px solid black" }}>

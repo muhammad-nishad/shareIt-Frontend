@@ -10,8 +10,8 @@ import { useSelector } from 'react-redux';
 
 function Posts({posts,dispatch}) {
 
-  const user = JSON.parse(Cookies.get("user"))
-  // const { user } = useSelector(state => ({ ...state }))
+  // const user = JSON.parse(Cookies.get("user"))
+  const { user } = useSelector(state => ({ ...state }))
   const refresh = useSelector((state) => state.user.refresh)
   
   useEffect(() => {
