@@ -33,7 +33,6 @@ export default function Admin() {
             <Paper elevation={20} style={paperStyle} >
                 <Grid align='center' >
                     <Avatar style={avatarStyle}>
-                        {/* <AddCircleOutlineOutlinedIcon/> */}
                     </Avatar>
                     <h2 style={headerStyle}>ADMIN LOGIN</h2>
                     <Typography variant='caption'>Please fill this form to login !!</Typography>

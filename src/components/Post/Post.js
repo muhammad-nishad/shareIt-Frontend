@@ -4,8 +4,6 @@ import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie'
-import { IconButtonProps } from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
@@ -24,8 +22,9 @@ const stylee = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    border: '1px solid #000',
     boxShadow: 24,
+    borderRadius:4,
     p: 4,
 };
 
@@ -44,6 +43,7 @@ const ExpandMore = styled((props) => {
 
 
 export default function Post({ post, savedPost, profile, feed }) {
+    // console.log(post,'post from redux');
     const { user } = useSelector(state => ({ ...state }))
     // console.log(user,'user in redux');
     const [likes, setLikes] = useState(false)
@@ -65,7 +65,6 @@ export default function Post({ post, savedPost, profile, feed }) {
 
 
     useEffect(() => {
-        // console.log({userid : post.likes});
         if (post?.likes.includes(user?._id)) {
             setLikes(true)
         } else {
@@ -106,6 +105,7 @@ export default function Post({ post, savedPost, profile, feed }) {
         },
         onSubmit: (values, { resetForm }) => {
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addcomment`, { values, postid: post._id }, { headers: { token: userToken.token } }).then(({ data }) => {
+                console.log(data,'commment');
                 dispatch({ type: 'REFRESH' })
                 resetForm({ values: '' })
             })
@@ -143,17 +143,6 @@ export default function Post({ post, savedPost, profile, feed }) {
 
     }
 
-    // const getUserProfile=(id)=>{
-    //     console.log(id,'userid');
-    //     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getUserProfile/${id}`, { headers: { token: userToken.token } }).then(({data})=>{
-
-    //         console.log(data,'user');
-    //     })
-    // }
-
-
-
-
     const [openn, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClosee = () => setOpen(false);
@@ -175,7 +164,6 @@ export default function Post({ post, savedPost, profile, feed }) {
                         </IconButton>
                     }
                     title={savedPost ? user?.first_name : post?.userid?.first_name}
-
                     subheader={<Moment fromNow interval={30}>
                         {post.createdAt}
                     </Moment>}
@@ -188,40 +176,55 @@ export default function Post({ post, savedPost, profile, feed }) {
                 >
 
                     <Box sx={stylee}>
-                        {user?._id == post?.userid?._id ? <Button onClick={deletePost}  >Delete Post</Button> : (<>
+                        {user?._id == post?.userid?._id ? 
+                        <>
+                        <div style={{display:"flex",justifyContent:"center"}} >
+
+                        <button style={{color: 'red', borderRadius: "7px", cursor: "pointer", border: "none", backgroundColor: "white"}} onClick={deletePost}  >Delete</button>
+                        </div>
+                        <hr style={{marginTop:"7px"}} />
+                        <div style={{display:"flex",justifyContent:"center"}} >
+
+                        <button style={{ height: "34px", color: 'black', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} onClick={handleClose}  >cancel</button>
+                        </div>
+                        </>
+                        
+                         : (<>
                             <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)" }}>
-                                {/* <CloseIcon /> */}
                             </div>
-                            <Typography>
+                            <Typography sx={{display:'flex',justifyContent:"center",color:"red",cursor:'pointer'}} >
                                 Report a Post
                             </Typography>
+                            <hr style={{marginTop:"10px"}}  />
 
-                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <Typography id="modal-modal-description" sx={{ mt: 2 ,cursor:'pointer'}}>
                                 Please select a problem
                             </Typography>
-                            <div style={{ marginTop: "2px" }}>
+                            <div style={{ marginTop: "5px" }}>
                                 <Typography  >Nudity</Typography>
 
                             </div>
                             <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
                                 <NavigateNextIcon onClick={() => {
+                                    reportPost()
                                     swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
                                     handleOpen()
 
                                 }}
-
                                 />
                             </div>
                             <Typography>Terrorism</Typography>
                             <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
                                 <NavigateNextIcon onClick={() => {
                                     reportPost()
+                                    console.log('terrorism');
                                     swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
                                 }} />
                             </div>
                             <Typography>Violence</Typography>
                             <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
                                 <NavigateNextIcon onClick={() => {
+                                    reportPost()
                                     swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
                                 }} />
                             </div>
@@ -246,14 +249,12 @@ export default function Post({ post, savedPost, profile, feed }) {
                 <div style={{ display: 'flex', justifyContent: "space-between", paddingBottom: "8px" }}>
                     <span style={{ display: "flex", justifyContent: "space-around", paddingLeft: "18px" }} >
                         <small >
-
                             {post?.likes?.length}
                         </small>
                         <small style={{ paddingLeft: "3px" }} > likes </small>
                     </span>
                     <span style={{ marginRight: "10px" }}>
                         <small>
-
                             {post?.comments?.length}
                         </small>
                         <small style={{ paddingLeft: "3px" }}>
@@ -261,15 +262,12 @@ export default function Post({ post, savedPost, profile, feed }) {
                         </small>
                     </span>
                 </div>
-
                 <hr />
-
                 <CardActions disableSpacing sx={{ display: "flex", justifyContent: "space-around" }}>
                     <IconButton aria-label="add to favoritess" size='small'>
                         <Checkbox onClick={addLike}
                             icon={!likes ? <Favorite sx={{ color: 'grey' }} /> : <Favorite sx={{ color: 'red' }} />} checkedIcon={<Favorite sx={{ color: 'red' }} />}
                         />
-
                     </IconButton>
                     <ExpandMore
                         expand={expanded}
@@ -280,11 +278,6 @@ export default function Post({ post, savedPost, profile, feed }) {
                         <CommentOutlinedIcon />
                     </ExpandMore>
                     {save ? <BookmarkOutlinedIcon onClick={savePost} /> : <Save onClick={savePost} />}
-                    {/* {
-                    user?.savedPosts?.post?._id===post?._id  ? "true" : "fals"
-                } */}
-
-
                     {
                         post?.userid?.savedPosts?.post == post._id ? "saved" : "not saved"
                     }
@@ -293,7 +286,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        <Box sx={{ maxHeight: 200, overflowY: 'scroll' }}>
+                        <Box sx={{ maxHeight: 200, overflowY: 'scroll'}}>
                             <form onSubmit={formik.handleSubmit}>
                                 {
                                     post.comments.map((comment) => {
@@ -304,13 +297,17 @@ export default function Post({ post, savedPost, profile, feed }) {
                                 }
 
                                 <TextField
+                                sx={{width:"26rem"}}
                                     name='comment'
                                     value={formik.values.comment}
                                     onChange={formik.handleChange}
-                                    fullWidth
                                     variant='standard'
-                                />
-                                <Button type='submit'>Send</Button>
+                                    placeholder='Add a comment'
+                                    />
+                                <button style={{ color: "#47afff", cursor: "pointer",width:"0",border:"aliceblue" }}   type='submit' >Post</button>
+                                <div>
+
+                                </div>
                             </form>
                         </Box>
                     </CardContent>

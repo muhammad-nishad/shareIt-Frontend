@@ -1,10 +1,33 @@
-import { Box } from '@material-ui/core'
+
 import React, { useState } from 'react'
 import Datatable from "react-data-table-component"
 import axios from "axios"
 import { useEffect } from 'react'
 import './AdminFeed.css'
-import { Button } from '@mui/material'
+
+const style1={
+  width:'60px',
+  height:"30px",
+  backgroundColor:"red",
+  color:"white",
+  padding:"4px",
+  border:"1px solid",
+  borderRadius:"5px",
+  fontSize:'10px',
+  cursor:"pointer"
+}
+const style2={
+  width:'60px',
+  height:"30px",
+  backgroundColor:"green",
+  color:"white",
+  padding:"4px",
+  border:"1px solid",
+  borderRadius:"5px",
+  fontSize:'10px',
+  cursor:"pointer"
+
+}
 
 export default function AdminFeed() {
   const [users, setUsers] = useState([])
@@ -12,9 +35,9 @@ export default function AdminFeed() {
     const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/authorizer/getUsers`)
     setUsers(data)
   }
-
   const userManagement=(id)=>{
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/authorizer/userManagement`,{id}).then((response)=>{
+        console.log(response);
         getAllUsers()
       })
   }
@@ -22,6 +45,7 @@ export default function AdminFeed() {
   useEffect(() => {
     getAllUsers();
   }, [])
+
   const columns = [
     {
       name: "First name",
@@ -44,22 +68,19 @@ export default function AdminFeed() {
     {
       name: "Active Status",
       selector: (users) =>
-        <Button onClick={()=>{
-          userManagement(users._id)
-          
-        }}>
-          {users.Active ?
-            "BLOCK" : "ACTIVE"
-          }
-
-        </Button>
+      <button  style={users.Active ? style1 : style2} onClick={()=>{
+        userManagement(users._id)
+      }} >
+        {
+          users.Active ?
+          "BLOCK"
+          :'ACTIVE'
+        }
+      </button>
       ,
       sortable: true
-
-
     },
   ]
-  // console.log(users)
   return (
     <>
       <div className="feedMain">

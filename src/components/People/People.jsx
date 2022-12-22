@@ -11,18 +11,6 @@ export default function People() {
     const { token } = tokenData
 
     const [users, setUsers] = useState([])
-    // const [follow,setFollow]=useState(false)
-    
-    // const followUser = async (id) => {
-    //     axios.post(`${process.env.REACT_APP_BACKEND_URL}/follow`, { userid: id }, { headers: { token: token } }).then((response) => {
-    //         console.log(response,'response');
-    //         // setFollow(true)
-    //     })
-    // }
-
-
-
-
     const getUser = async () => {
          axios.get(`${process.env.REACT_APP_BACKEND_URL}/getPeopleMayKnow`,{ headers: { token: token } }).then(({data})=>{
             console.log(data,'people you may know')
@@ -31,8 +19,6 @@ export default function People() {
     }
     useEffect(() => {
         getUser();
-
-
     }, [])
     return (
         <>
@@ -40,23 +26,6 @@ export default function People() {
             users?.map((data) =>(
                 <UserCard type="follow" data={data} />
             )
-                // <div style={{ width: "10vw", display: "flex", paddingTop: 25, paddingLeft: 30, gap: 12 }}>
-                //     <div style={{ border: "1px solid black" }}>
-                //         <img style={{ width: "10vw" }} src='icons/nishad.jpeg' />
-                //         <div>
-
-                //             {
-                //                 data.user_name
-                //             }
-                //         </div>
-                //         <Button onClick={() => {
-                //             followUser(data._id)
-                //         }} variant="contained" >Follow</Button>
-                //     </div>
-
-
-
-                // </div>
                 )}
 
         </>

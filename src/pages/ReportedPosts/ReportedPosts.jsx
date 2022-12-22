@@ -4,50 +4,69 @@ import React, { useState } from 'react'
 import { useEffect } from 'react'
 import Datatable from "react-data-table-component"
 
+const style1={
+  width:'60px',
+  height:"30px",
+  backgroundColor:"red",
+  color:"white",
+  padding:"4px",
+  border:"1px solid",
+  borderRadius:"5px",
+  fontSize:'10px',
+  cursor:"pointer"
+}
+
 export default function ReportedPosts() {
   const [report,setReport]=useState([])
-
   const reportedPosts=()=>{
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/authorizer/reportedPosts`).then((response)=>{
       setReport(response.data)
       console.log(response.data,'response');
     })
-    console.log(report,'report');
-    
+
   }
+   const deletePost=()=>{
+      console.log('cli');
+      // axios.post(`${process.env.REACT_APP_BACKEND_URL}/deletePost`,{})
+    }
   useEffect(()=>{
     reportedPosts()
 
   },[])
+  console.log(report,'report');
 
   const columns=[
     {
-      name:"First name",
-      selector:(report)=>report?.userid.first_name,
-      sortable: true
-    },{
-      name: "Last name",
-      selector: (report) => report?.userid.last_name,
-      sortable: true
-
-    },{
-
-    
-    name:"Reported Post",
-    selector:(report)=> <img width={100} height={50} src={report?.img}/>,
+    name:"Post",
+    selector:(report)=> <img maxwidth={"79px"} height={"109px"} src={report?.img}/>,
     sortable:true
   },
+
+  {
+    name:"Posted By",
+    selector:(report)=> report?.userid.first_name,
+    sortable:true
+  },
+
+
+
+
+
   {
 
     
     name:"Reported By",
-    selector:(report)=> report?.report.reportedBy,
+    selector:(report)=> report?.report?.reprotedBy?.email,
     sortable:true
   },
   {
-    name:"Action",
-    cell:row=><Button> Remoove</Button>
-  }
+    name:"Remove Post",
+    selector:(report)=>
+    <button style={style1}  onClick={()=>{
+      deletePost()
+    }}>Remove</button>,
+    sortable:true
+  },
   ]
 
  
@@ -58,6 +77,9 @@ export default function ReportedPosts() {
      <div className="feedMain">
         <Datatable columns={columns} data={report} />
       </div>
+      {
+        report?.userid?.first_name
+      }
 
 
 
