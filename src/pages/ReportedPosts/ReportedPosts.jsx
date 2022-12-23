@@ -25,9 +25,11 @@ export default function ReportedPosts() {
     })
 
   }
-   const deletePost=()=>{
-      console.log('cli');
-      // axios.post(`${process.env.REACT_APP_BACKEND_URL}/deletePost`,{})
+   const deletePost=(id)=>{
+      console.log(id,'postid');
+      axios.post(`${process.env.REACT_APP_BACKEND_URL}/deletePost`,{postid:id}).then((response)=>{
+        console.log(response,'response');
+      })
     }
   useEffect(()=>{
     reportedPosts()
@@ -48,13 +50,7 @@ export default function ReportedPosts() {
     sortable:true
   },
 
-
-
-
-
   {
-
-    
     name:"Reported By",
     selector:(report)=> report?.report?.reprotedBy?.email,
     sortable:true
@@ -63,7 +59,7 @@ export default function ReportedPosts() {
     name:"Remove Post",
     selector:(report)=>
     <button style={style1}  onClick={()=>{
-      deletePost()
+      deletePost(report._id)
     }}>Remove</button>,
     sortable:true
   },
