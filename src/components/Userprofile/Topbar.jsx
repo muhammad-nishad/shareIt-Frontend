@@ -80,10 +80,10 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
             console.log(error);
         })
     }
-    useEffect(() => {
-        followUser()
+    // useEffect(() => {
+    //     followUser()
 
-    }, [])
+    // }, [])
 
 
 

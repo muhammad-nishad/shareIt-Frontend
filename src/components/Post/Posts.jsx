@@ -17,7 +17,7 @@ function Posts({posts,dispatch}) {
   useEffect(() => {
 
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getposts`, { headers: { token: user?.token } }).then(({ data }) => {
-      console.log('getposts',data);
+      // console.log('getposts',data);
       dispatch({
         type: "POSTS_SUCCESS",
         payload: data

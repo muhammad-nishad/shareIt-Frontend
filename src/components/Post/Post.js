@@ -24,7 +24,7 @@ const stylee = {
     bgcolor: 'background.paper',
     border: '1px solid #000',
     boxShadow: 24,
-    borderRadius:4,
+    borderRadius: 4,
     p: 4,
 };
 
@@ -45,10 +45,11 @@ const ExpandMore = styled((props) => {
 export default function Post({ post, savedPost, profile, feed }) {
     // console.log(post,'post from redux');
     const { user } = useSelector(state => ({ ...state }))
-    // console.log(user,'user in redux');
+    // console.log(user, 'user in redux');
+    const refresh = useSelector((state) => state.user.refresh)
     const [likes, setLikes] = useState(false)
     const [save, setSave] = useState(false)
-    const [showMenu, setShowMenu] = useState(false)
+    const [refresh2, setRefresh2] = useState(false)
     const dispatch = useDispatch()
     //menu
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -73,14 +74,31 @@ export default function Post({ post, savedPost, profile, feed }) {
     }, [post])
 
 
-    useEffect(() => {
-        if (user?.savedPosts?.post === post?._id) {
-            setSave(true)
+    // useEffect(() => {
+    //     if (user?.savedPosts?.post === post?._id) {
+    //         setSave(true)
 
-        } else {
-            setSave(false)
-        }
-    }, [post,user])
+    //     } else {
+    //         setSave(false)
+    //     }
+    // }, [post,user])
+    useEffect(() => {
+        setSave(false)
+        user?.savedPosts.map((current) => {
+            if (current == post._id) {
+                setSave(true)
+            }
+        })
+    }, [user])
+
+
+    // if(user?.savedPosts.includes(post?._id)){
+
+    //     console.log('hey it includes');
+    // }else{
+    //     console.log('not includes');
+    // }
+
 
 
     //useselector
@@ -105,7 +123,7 @@ export default function Post({ post, savedPost, profile, feed }) {
         },
         onSubmit: (values, { resetForm }) => {
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addcomment`, { values, postid: post._id }, { headers: { token: userToken.token } }).then(({ data }) => {
-                console.log(data,'commment');
+                console.log(data, 'commment');
                 dispatch({ type: 'REFRESH' })
                 resetForm({ values: '' })
             })
@@ -121,14 +139,16 @@ export default function Post({ post, savedPost, profile, feed }) {
     }
 
     const savePost = () => {
-        setSave(true)
+        // setSave(true)
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/savedPost`, { postid: post._id, }, { headers: { token: userToken.token } }).then(({ data }) => {
             console.log(data, 'responseofsavedpost');
             if (data.type === "added") {
-                dispatch({ type: "SAVED_POST", payload: post._id })
+                dispatch({ type: "SAVED_POST", payload:post._id})
             } else if (data.type === "removed") {
-                dispatch({ type: "UNSAVE_POST", payload: post._id })
+                dispatch({ type: "UNSAVE_POST", payload:post._id})
             }
+           
+           
             // setSave(true)
         })
     }
@@ -148,12 +168,13 @@ export default function Post({ post, savedPost, profile, feed }) {
     const handleClosee = () => setOpen(false);
     return (
         <>
-            <Card sx={{ marginY: "25px", maxWidth: "30rem", width: '-webkit-fill-available', marginLeft: '0', boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.09)" }}>
+            <Card sx={{ marginY: "25px", maxWidth: "30rem", width: '-webkit-fill-available', marginLeft: '0', boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.09)", cursor: "pointer" }}>
                 <CardHeader
+
                     avatar={
                         <Avatar onClick={() => {
                             Navigate(`/profile/${post.userid._id}`)
-                        }} sx={{ bgcolor: 'black' }} aria-label="recipe">
+                        }} aria-label="recipe">
                             <img src={feed ? post.userid.profilePicture : profile ? profile.profilePicture : 'icons/blankprofile.webp'} style={{ width: "40px" }} />
                         </Avatar>
 
@@ -176,60 +197,60 @@ export default function Post({ post, savedPost, profile, feed }) {
                 >
 
                     <Box sx={stylee}>
-                        {user?._id == post?.userid?._id ? 
-                        <>
-                        <div style={{display:"flex",justifyContent:"center"}} >
+                        {user?._id == post?.userid?._id ?
+                            <>
+                                <div style={{ display: "flex", justifyContent: "center" }} >
 
-                        <button style={{color: 'red', borderRadius: "7px", cursor: "pointer", border: "none", backgroundColor: "white"}} onClick={deletePost}  >Delete</button>
-                        </div>
-                        <hr style={{marginTop:"7px"}} />
-                        <div style={{display:"flex",justifyContent:"center"}} >
+                                    <button style={{ color: 'red', borderRadius: "7px", cursor: "pointer", border: "none", backgroundColor: "white" }} onClick={deletePost}  >Delete</button>
+                                </div>
+                                <hr style={{ marginTop: "7px" }} />
+                                <div style={{ display: "flex", justifyContent: "center" }} >
 
-                        <button style={{ height: "34px", color: 'black', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} onClick={handleClose}  >cancel</button>
-                        </div>
-                        </>
-                        
-                         : (<>
-                            <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)" }}>
-                            </div>
-                            <Typography sx={{display:'flex',justifyContent:"center",color:"red",cursor:'pointer'}} >
-                                Report a Post
-                            </Typography>
-                            <hr style={{marginTop:"10px"}}  />
+                                    <button style={{ height: "34px", color: 'black', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} onClick={handleClose}  >cancel</button>
+                                </div>
+                            </>
 
-                            <Typography id="modal-modal-description" sx={{ mt: 2 ,cursor:'pointer'}}>
-                                Please select a problem
-                            </Typography>
-                            <div style={{ marginTop: "5px" }}>
-                                <Typography  >Nudity</Typography>
+                            : (<>
+                                <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)" }}>
+                                </div>
+                                <Typography sx={{ display: 'flex', justifyContent: "center", color: "red", cursor: 'pointer' }} >
+                                    Report a Post
+                                </Typography>
+                                <hr style={{ marginTop: "10px" }} />
 
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
-                                <NavigateNextIcon onClick={() => {
-                                    reportPost()
-                                    swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
-                                    handleOpen()
+                                <Typography id="modal-modal-description" sx={{ mt: 2, cursor: 'pointer' }}>
+                                    Please select a problem
+                                </Typography>
+                                <div style={{ marginTop: "5px" }}>
+                                    <Typography  >Nudity</Typography>
 
-                                }}
-                                />
-                            </div>
-                            <Typography>Terrorism</Typography>
-                            <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
-                                <NavigateNextIcon onClick={() => {
-                                    reportPost()
-                                    console.log('terrorism');
-                                    swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
-                                }} />
-                            </div>
-                            <Typography>Violence</Typography>
-                            <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
-                                <NavigateNextIcon onClick={() => {
-                                    reportPost()
-                                    swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
-                                }} />
-                            </div>
-                        </>
-                        )}
+                                </div>
+                                <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
+                                    <NavigateNextIcon onClick={() => {
+                                        reportPost()
+                                        swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
+                                        handleOpen()
+
+                                    }}
+                                    />
+                                </div>
+                                <Typography>Terrorism</Typography>
+                                <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
+                                    <NavigateNextIcon onClick={() => {
+                                        reportPost()
+                                        console.log('terrorism');
+                                        swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
+                                    }} />
+                                </div>
+                                <Typography>Violence</Typography>
+                                <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
+                                    <NavigateNextIcon onClick={() => {
+                                        reportPost()
+                                        swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
+                                    }} />
+                                </div>
+                            </>
+                            )}
                     </Box>
                 </Modal>
                 {
@@ -279,14 +300,14 @@ export default function Post({ post, savedPost, profile, feed }) {
                     </ExpandMore>
                     {save ? <BookmarkOutlinedIcon onClick={savePost} /> : <Save onClick={savePost} />}
                     {
-                        post?.userid?.savedPosts?.post == post._id ? "saved" : "not saved"
+                        save ? "saved" : "not saved"
                     }
 
 
                 </CardActions>
                 <Collapse in={expanded} timeout="auto" unmountOnExit>
                     <CardContent>
-                        <Box sx={{ maxHeight: 200, overflowY: 'scroll'}}>
+                        <Box sx={{ maxHeight: 200, overflowY: 'scroll' }}>
                             <form onSubmit={formik.handleSubmit}>
                                 {
                                     post.comments.map((comment) => {
@@ -297,14 +318,14 @@ export default function Post({ post, savedPost, profile, feed }) {
                                 }
 
                                 <TextField
-                                sx={{width:"26rem"}}
+                                    sx={{ width: "26rem" }}
                                     name='comment'
                                     value={formik.values.comment}
                                     onChange={formik.handleChange}
                                     variant='standard'
                                     placeholder='Add a comment'
-                                    />
-                                <button style={{ color: "#47afff", cursor: "pointer",width:"0",border:"aliceblue" }}   type='submit' >Post</button>
+                                />
+                                <button style={{ color: "#47afff", cursor: "pointer", width: "0", border: "aliceblue" }} type='submit' >Post</button>
                                 <div>
 
                                 </div>

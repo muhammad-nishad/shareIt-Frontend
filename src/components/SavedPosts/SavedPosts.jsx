@@ -12,6 +12,7 @@ export default function SavedPosts() {
   const { token } = tokenData
   const savedPosts=()=>{
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getallSavedPosts`,{headers:{token:token}}).then(({data})=>{
+      console.log(data,'getallsavedposts');
       setPost(data.savedPosts)
     })
   }
@@ -31,7 +32,7 @@ export default function SavedPosts() {
 
     { 
     post &&
-    post.map((post)=> (<Post   post={post.post} savedPost  />))  
+    post.map((post)=> (<Post   post={post} savedPost  />))  
     
   }
   </Box>

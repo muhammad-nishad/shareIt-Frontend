@@ -24,7 +24,7 @@ export default function Following({ }) {
 
     const getAllFollowing = async (id) => {
       axios.get(`${process.env.REACT_APP_BACKEND_URL}/getallFollowing`, { headers: { token: token } }).then((response) => {
-          console.log(response.data, 'response');
+          console.log(response.data, 'following');
           setUser(response.data)
           setFollow(true)
       })
