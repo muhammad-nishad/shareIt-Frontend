@@ -1,11 +1,8 @@
 import { AppBar, Toolbar, Typography, styled, InputBase, Badge, Avatar, Menu, MenuItem } from '@mui/material';
-import MailIcon from '@mui/icons-material/Mail';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import Box from '@mui/material/Box';
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, useFormik } from 'formik';
-import axios from 'axios';
 import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
 
@@ -108,7 +105,6 @@ function Navbar({ color }) {
                             setOpen(true)}
 
                     />
-                    {/* <Typography variant='span'>Nishad</Typography> */}
                 </UserBox>
             </StyledToolBar>
             <Menu 
@@ -130,7 +126,7 @@ function Navbar({ color }) {
                     Navigate('/profile')
 
                 }} >Profile</MenuItem>
-                <MenuItem>My account</MenuItem>
+                {/* <MenuItem>My account</MenuItem> */}
                 <MenuItem onClick={() => {
                     Cookies.remove('user')
                     dispatch({ type: 'LOGOUT', payload: null })

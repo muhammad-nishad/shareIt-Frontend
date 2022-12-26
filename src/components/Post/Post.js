@@ -1,5 +1,6 @@
-import { Box, Card, Typography, CardMedia, CardContent, CardActions, Avatar, IconButton, CardHeader, Checkbox, Collapse, styled, TextField, Button, Modal, Menu, MenuItem, Fade } from '@mui/material';
-import { Favorite, FavoriteBorder, MoreVert } from '@mui/icons-material';
+import { Box, Card, Typography, CardMedia, CardContent, CardActions, Avatar, IconButton, CardHeader, Checkbox, Collapse, styled, TextField, Modal, } from '@mui/material';
+import { Favorite, MoreVert } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -7,7 +8,6 @@ import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { useFormik } from 'formik'
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import CloseIcon from '@mui/icons-material/Close';
 import Moment from 'react-moment';
 import swal from 'sweetalert';
 import Save from '@mui/icons-material/TurnedInNotOutlined';
@@ -43,13 +43,13 @@ const ExpandMore = styled((props) => {
 
 
 export default function Post({ post, savedPost, profile, feed }) {
-    // console.log(post,'post from redux');
+    console.log(post, 'commentid');
     const { user } = useSelector(state => ({ ...state }))
-    // console.log(user, 'user in redux');
+    const token = user?.token
     const refresh = useSelector((state) => state.user.refresh)
     const [likes, setLikes] = useState(false)
     const [save, setSave] = useState(false)
-    const [refresh2, setRefresh2] = useState(false)
+    // const [refresh2, setRefresh2] = useState(false)
     const dispatch = useDispatch()
     //menu
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -84,7 +84,7 @@ export default function Post({ post, savedPost, profile, feed }) {
     // }, [post,user])
     useEffect(() => {
         setSave(false)
-        user?.savedPosts.map((current) => {
+        user?.savedPosts?.map((current) => {
             if (current == post._id) {
                 setSave(true)
             }
@@ -92,12 +92,7 @@ export default function Post({ post, savedPost, profile, feed }) {
     }, [user])
 
 
-    // if(user?.savedPosts.includes(post?._id)){
 
-    //     console.log('hey it includes');
-    // }else{
-    //     console.log('not includes');
-    // }
 
 
 
@@ -143,13 +138,24 @@ export default function Post({ post, savedPost, profile, feed }) {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/savedPost`, { postid: post._id, }, { headers: { token: userToken.token } }).then(({ data }) => {
             console.log(data, 'responseofsavedpost');
             if (data.type === "added") {
-                dispatch({ type: "SAVED_POST", payload:post._id})
+                dispatch({ type: "SAVED_POST", payload: post._id })
             } else if (data.type === "removed") {
-                dispatch({ type: "UNSAVE_POST", payload:post._id})
+                dispatch({ type: "UNSAVE_POST", payload: post._id })
             }
-           
-           
+
+
             // setSave(true)
+        })
+    }
+    // const getUserProfile=(id)=>{
+    //     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getUserProfile/${id?id:user._id}`,{headers:{token:token}}).then(({data})=>{
+    //         console.log(data,'dfatdfkdjfk');
+
+    //     })
+    // }
+    const deleteComment = (id) => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteComment`, { postid: post._id,commentId:id }, { headers: { token: userToken.token } }).then(({ data }) => {
+            console.log(data, 'response');
         })
     }
 
@@ -162,6 +168,9 @@ export default function Post({ post, savedPost, profile, feed }) {
         })
 
     }
+    // useEffect(()=>{
+    //     getUserProfile()
+    // },[])
 
     const [openn, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -299,9 +308,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                         <CommentOutlinedIcon />
                     </ExpandMore>
                     {save ? <BookmarkOutlinedIcon onClick={savePost} /> : <Save onClick={savePost} />}
-                    {
-                        save ? "saved" : "not saved"
-                    }
+
 
 
                 </CardActions>
@@ -312,7 +319,26 @@ export default function Post({ post, savedPost, profile, feed }) {
                                 {
                                     post.comments.map((comment) => {
                                         return (
-                                            <p key={comment.comment} >{comment.comment}</p>
+                                            <>
+                                                <img onClick={() => {
+                                                    Navigate(`/profile/${comment.commentBy._id}`)
+                                                    // getUserProfile(comment.commentBy._id)
+                                                    console.log(comment.commentBy._id, 'userid');
+                                                }} style={{ width: "20px", borderRadius: "10px" }}
+                                                    src={comment && comment.commentBy.profilePicture ? comment.commentBy.profilePicture : '/icons/blankprofile.webp'} />
+                                                {comment.commentBy.first_name}
+                                                <p key={comment.comment} >{comment.comment}</p>
+                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+
+                                                    {user._id == comment?.commentBy?._id ? <DeleteIcon onClick={() => {
+                                                        deleteComment(comment._id)
+
+                                                    }} /> : null}
+                                                </div>
+
+
+                                            </>
+                                            // {comment.commentBy===user._id ? <h1>true</h1> :null}
                                         )
                                     })
                                 }
@@ -327,7 +353,6 @@ export default function Post({ post, savedPost, profile, feed }) {
                                 />
                                 <button style={{ color: "#47afff", cursor: "pointer", width: "0", border: "aliceblue" }} type='submit' >Post</button>
                                 <div>
-
                                 </div>
                             </form>
                         </Box>

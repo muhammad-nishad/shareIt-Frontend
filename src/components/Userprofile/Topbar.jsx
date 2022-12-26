@@ -50,7 +50,8 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
         axios.post("https://api.cloudinary.com/v1_1/dl0nkbe8b/image/upload", formData).then((response) => {
             const img = response.data.url
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProfilePicture`, { img }, { headers: { token: token } }).then((data) => {
-                dispatch({ type: 'REFRESH' })
+                dispatch({ type:'REFRESH' })
+                handleClose()
                 console.log(data, 'data');
             })
 

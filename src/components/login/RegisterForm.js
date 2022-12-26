@@ -6,9 +6,10 @@ import DateOfBirthSelect from "./DateOfBirthSelect"
 import GenderSelect from "./GenderSelect";
 import DotLoader from "react-spinners/DotLoader";
 import axios from "axios";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import CancelIcon from '@mui/icons-material/Cancel';
 
 
 const registerValidation = Yup.object({
@@ -47,10 +48,10 @@ const userInfos = {
   gender: "",
 }
 
-export default function RegisterForm({setVisible}) {
+export default function RegisterForm({ setVisible }) {
   const navigate = useNavigate()
   const [user, setUser] = useState(userInfos)
-  const { 
+  const {
     first_name,
     last_name,
     email,
@@ -64,7 +65,7 @@ export default function RegisterForm({setVisible}) {
     const { name, value } = e.target;
     setUser({ ...user, [name]: value })
   }
-const tempYear= new Date().getFullYear()
+  const tempYear = new Date().getFullYear()
   const years = Array.from(new Array(108), (val, index) => tempYear - index)
   const months = Array.from(new Array(12), (val, index) => 1 + index)
   const getdays = () => {
@@ -75,46 +76,53 @@ const tempYear= new Date().getFullYear()
   const [dateError, setDateError] = useState("");
   const [genderError, setGenderError] = useState("")
 
-  const [error,setError]=useState("");
-  const [success,setSuccess]=useState("");
-  const [loading,setLoading]=useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch()
 
- const registerSubmit = async ()=>{
-  try {
-    const {data}= await axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`,{
-      first_name,
-      last_name,
-      email,
-      password,
-      bYear,
-      bMonth,
-      bDay,
-      gender,
-    });
-    console.log(data,'data');
-    setError("");
-    setSuccess(data.message);
-    const {message, ...rest} = data;
-    setTimeout(() => {
-      dispatch({type:"LOGIN", payload: rest});
-      Cookies.set("user", JSON.stringify(rest))
-      navigate("/")
-    }, 2000);
-  } catch (error) {
-    setLoading(false);
-    setSuccess("");
-    setError(error.response.data.message)
+  const registerSubmit = async () => {
+    try {
+      const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`, {
+        first_name,
+        last_name,
+        email,
+        password,
+        bYear,
+        bMonth,
+        bDay,
+        gender,
+      });
+      console.log(data, 'data');
+      setError("");
+      setSuccess(data.message);
+      const { message, ...rest } = data;
+      setTimeout(() => {
+        dispatch({ type: "LOGIN", payload: rest });
+        Cookies.set("user", JSON.stringify(rest))
+        navigate("/")
+      }, 2000);
+    } catch (error) {
+      setLoading(false);
+      setSuccess("");
+      setError(error.response.data.message)
+    }
+
+
   }
-
-
- }
   return (
     <div className="blur1">
       <div className="register">
         <div className="register_header">
-          <i className="exit_icon" onClick={()=>setVisible(false)}></i>
+          {/* <i className="exit_icon"
+          ></i> */}
+          <div style={{display:"flex",justifyContent:"flex-end",cursor:"pointer"}} >
+
+          <CancelIcon onClick={() => {
+            setVisible(false)
+          }} />
+          </div>
           <span>Sign Up</span>
           <span>Its really quick</span>
         </div>
@@ -180,18 +188,18 @@ const tempYear= new Date().getFullYear()
                   <div className="reg_line_header">
                     Date of Birth <i className="info_icon"></i>
                   </div>
-                 <DateOfBirthSelect bDay={bDay} bMonth={bMonth} bYear={bYear} days={days} months={months} years={years} dateError={dateError} handleRegisterChange={handleRegisterChange} />
+                  <DateOfBirthSelect bDay={bDay} bMonth={bMonth} bYear={bYear} days={days} months={months} years={years} dateError={dateError} handleRegisterChange={handleRegisterChange} />
                 </div>
                 <div className="reg_col">
                   <div className="reg_line_header">
                     Gender <i className="info_icon"></i>
                   </div>
-                 <GenderSelect genderError={genderError} handleRegisterChange={handleRegisterChange} />
+                  <GenderSelect genderError={genderError} handleRegisterChange={handleRegisterChange} />
                 </div>
                 <div className="reg_btn_wrapper">
                   <button className="blue_btn open_signup">Sign up</button>
                 </div>
-                <DotLoader color="#1876f2" loading={loading} size={30}  />
+                <DotLoader color="#1876f2" loading={loading} size={30} />
                 {error && <div className="error_text">{error}</div>}
                 {success && <div className="success_text">{success}</div>}
               </Form>

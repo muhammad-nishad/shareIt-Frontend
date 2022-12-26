@@ -11,7 +11,7 @@ export default function AdminSidebar() {
   const Navigate = useNavigate()
   return (
     <>
-    <Box>
+    {/* <Box>
       <Box position='fixed' >
         
     <List>
@@ -55,7 +55,7 @@ export default function AdminSidebar() {
 
     
       </Box>
-    </Box>
+    </Box> */}
 
 
     

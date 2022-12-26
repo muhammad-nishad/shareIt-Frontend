@@ -13,16 +13,17 @@ export default function Profile({id , own}) {
   const [post,setPosts]= useState([])
   const [following,setFollowing] = useState(false)
   const [profile,setProfile]=useState()
-  console.log(posts, 'posts');
+  // console.log(posts, 'posts');
   const { user } = useSelector(state => ({ ...state }))
-  console.log(user, 'userrr');
+  // console.log(user, 'userrr');
   const refresh = useSelector((state) => state.user.refresh)
   const token = user?.token
 
   const getUserProfile = () => {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getUserProfile/${id ? id : user._id}`, { headers: { token: token } }).then(({ data }) => {
       console.log(data, 'getuserprofile');
-      dispatch({ type: 'REFRESH' })
+      // Cookies.set("user",JSON.stringify(data.user))
+      dispatch({ type:'REFRESH' })
       setProfile(data.user)
       setPosts(data.post)
       dispatch({

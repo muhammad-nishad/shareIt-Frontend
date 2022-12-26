@@ -4,6 +4,7 @@ import Datatable from "react-data-table-component"
 import axios from "axios"
 import { useEffect } from 'react'
 import './AdminFeed.css'
+import AdminTopbar from '../AdminTopbar/AdminTopbar'
 
 const style1={
   width:'60px',
@@ -83,6 +84,7 @@ export default function AdminFeed() {
   ]
   return (
     <>
+    <AdminTopbar/>
       <div className="feedMain">
         <Datatable columns={columns} data={users} />
       </div>

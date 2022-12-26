@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import Datatable from "react-data-table-component"
+import AdminTopbar from '../../components/AdminTopbar/AdminTopbar'
 
 const style1={
   width:'60px',
@@ -17,6 +18,7 @@ const style1={
 }
 
 export default function ReportedPosts() {
+  
   const [report,setReport]=useState([])
   const reportedPosts=()=>{
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/authorizer/reportedPosts`).then((response)=>{
@@ -70,6 +72,7 @@ export default function ReportedPosts() {
   
   return (
     <>
+    <AdminTopbar/>
      <div className="feedMain">
         <Datatable columns={columns} data={report} />
       </div>
