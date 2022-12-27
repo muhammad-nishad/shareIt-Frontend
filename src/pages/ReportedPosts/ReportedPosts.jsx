@@ -23,7 +23,7 @@ export default function ReportedPosts() {
   const reportedPosts=()=>{
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/authorizer/reportedPosts`).then((response)=>{
       setReport(response.data)
-      console.log(response.data,'response');
+      console.log(response.data,'report');
     })
 
   }
@@ -53,8 +53,8 @@ export default function ReportedPosts() {
   },
 
   {
-    name:"Reported By",
-    selector:(report)=> report?.report?.reprotedBy?.email,
+    name:"Reports",
+    selector:(report)=> report?.report.length,
     sortable:true
   },
   {

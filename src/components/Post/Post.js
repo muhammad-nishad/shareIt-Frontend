@@ -43,7 +43,7 @@ const ExpandMore = styled((props) => {
 
 
 export default function Post({ post, savedPost, profile, feed }) {
-    console.log(post, 'commentid');
+    const [commentCount, setCommentCount] = useState(0)
     const { user } = useSelector(state => ({ ...state }))
     const token = user?.token
     const refresh = useSelector((state) => state.user.refresh)
@@ -73,6 +73,14 @@ export default function Post({ post, savedPost, profile, feed }) {
         }
     }, [post])
 
+    useEffect(() => {
+        setCommentCount(post.comments.reduce((acc, curr) => {
+            if (!curr.commentDelete) {
+                acc++
+            }
+            return acc
+        }, 0))
+    }, [post])
 
     // useEffect(() => {
     //     if (user?.savedPosts?.post === post?._id) {
@@ -154,8 +162,9 @@ export default function Post({ post, savedPost, profile, feed }) {
     //     })
     // }
     const deleteComment = (id) => {
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteComment`, { postid: post._id,commentId:id }, { headers: { token: userToken.token } }).then(({ data }) => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/deleteComment`, { commentId: id }, { headers: { token: userToken.token } }).then(({ data }) => {
             console.log(data, 'response');
+            dispatch({ type: 'REFRESH' })
         })
     }
 
@@ -285,7 +294,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                     </span>
                     <span style={{ marginRight: "10px" }}>
                         <small>
-                            {post?.comments?.length}
+                            {commentCount}
                         </small>
                         <small style={{ paddingLeft: "3px" }}>
                             comments
@@ -318,28 +327,36 @@ export default function Post({ post, savedPost, profile, feed }) {
                             <form onSubmit={formik.handleSubmit}>
                                 {
                                     post.comments.map((comment) => {
-                                        return (
-                                            <>
-                                                <img onClick={() => {
-                                                    Navigate(`/profile/${comment.commentBy._id}`)
-                                                    // getUserProfile(comment.commentBy._id)
-                                                    console.log(comment.commentBy._id, 'userid');
-                                                }} style={{ width: "20px", borderRadius: "10px" }}
-                                                    src={comment && comment.commentBy.profilePicture ? comment.commentBy.profilePicture : '/icons/blankprofile.webp'} />
-                                                {comment.commentBy.first_name}
-                                                <p key={comment.comment} >{comment.comment}</p>
-                                                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                                        if (!comment.commentDelete)
+                                            return (
+                                                <>
+                                                    <div style={{ display: 'flex' }} y>
+                                                        <img onClick={() => {
+                                                            Navigate(`/profile/${comment.commentBy._id}`)
+                                                            console.log(comment.commentBy._id, 'userid');
+                                                        }} style={{ width: "20px", borderRadius: "10px" }}
+                                                            src={comment && comment.commentBy.profilePicture ? comment.commentBy.profilePicture : '/icons/blankprofile.webp'} />
+                                                            <h5>
 
-                                                    {user._id == comment?.commentBy?._id ? <DeleteIcon onClick={() => {
-                                                        deleteComment(comment._id)
+                                                        &nbsp;&nbsp;  {comment.commentBy.first_name}&nbsp;&nbsp;&nbsp;
+                                                            </h5>
+                                                  
 
-                                                    }} /> : null}
-                                                </div>
+                                                        <p key={comment.comment} >{comment.comment}</p>
+                                                        
+                                                        {/* {<Moment fromNow interval={30}  >{comment.createdAt}</Moment>} */}
+                                                        <div style={{ display: 'flex', justifyContent: 'flex-end',width:"21rem" }}>
+                                                            {user._id == comment?.commentBy?._id ? <DeleteIcon onClick={() => {
+                                                                deleteComment(comment._id)
+
+                                                            }} /> : null}
+                                                        </div>
+                                                    </div>
 
 
-                                            </>
-                                            // {comment.commentBy===user._id ? <h1>true</h1> :null}
-                                        )
+                                                </>
+                                                // {comment.commentBy===user._id ? <h1>true</h1> :null}
+                                            )
                                     })
                                 }
 

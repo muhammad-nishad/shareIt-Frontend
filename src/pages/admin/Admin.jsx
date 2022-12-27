@@ -2,10 +2,13 @@ import React from 'react'
 import axios from 'axios'
 import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
+import { useDispatch } from "react-redux";
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material'
+import { DateRange } from '@mui/icons-material';
 
 
 export default function Admin() {
+    const dispatch = useDispatch();
     let navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
@@ -14,8 +17,10 @@ export default function Admin() {
         },
         onSubmit: values => {
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/authorizer/login`, values).then(({data}) => {
-                localStorage.setItem('admin',data.token)
-                if (data.token) {
+                console.log(data,'adminlogin');
+                localStorage.setItem('admin',JSON.stringify(data.admin))
+                dispatch({type:"ADMIN_LOGIN",payload:data.admin})
+                if (data.admin) {
                     navigate('/authorizer/home')
                 } else {
                     console.log('failed');

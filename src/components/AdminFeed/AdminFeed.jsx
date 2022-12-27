@@ -51,7 +51,9 @@ export default function AdminFeed() {
     {
       name: "First name",
       selector: (users) => users.first_name,
-      sortable: true
+      sortable: true, 
+       
+
 
     },
     {
