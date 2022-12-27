@@ -5,6 +5,7 @@ import axios from "axios"
 import { useEffect } from 'react'
 import './AdminFeed.css'
 import AdminTopbar from '../AdminTopbar/AdminTopbar'
+import { useSelector } from 'react-redux';
 
 const style1={
   width:'60px',
@@ -32,6 +33,9 @@ const style2={
 
 export default function AdminFeed() {
   const [users, setUsers] = useState([])
+  const { admin } = useSelector(state => ({ ...state }))
+  const refresh = useSelector((state) => state.admin.refresh)
+
   const getAllUsers = async () => {
     const { data } = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/authorizer/getUsers`)
     setUsers(data)
@@ -45,7 +49,7 @@ export default function AdminFeed() {
 
   useEffect(() => {
     getAllUsers();
-  }, [])
+  }, [refresh])
 
   const columns = [
     {

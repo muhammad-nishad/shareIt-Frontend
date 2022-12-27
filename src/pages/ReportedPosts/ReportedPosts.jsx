@@ -3,6 +3,7 @@ import axios from 'axios'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 import Datatable from "react-data-table-component"
+import { useDispatch, useSelector } from 'react-redux'
 import AdminTopbar from '../../components/AdminTopbar/AdminTopbar'
 
 const style1={
@@ -18,21 +19,35 @@ const style1={
 }
 
 export default function ReportedPosts() {
+  const refresh = useSelector((state) => state.admin.refresh)
+  const dispatch = useDispatch()
   
   const [report,setReport]=useState([])
   const reportedPosts=()=>{
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/authorizer/reportedPosts`).then((response)=>{
       setReport(response.data)
+      // dispatch({ type: 'REFRESH' })
       console.log(response.data,'report');
     })
 
   }
-   const deletePost=(id)=>{
+
+  
+    const deletePost=(id)=>{
       console.log(id,'postid');
       axios.post(`${process.env.REACT_APP_BACKEND_URL}/deletePost`,{postid:id}).then((response)=>{
+        setReport((prev)=>prev.filter((r)=>r._id!==id))
         console.log(response,'response');
       })
     }
+
+
+
+// useEffect(()=>{
+//   deletePost()
+// },[])
+
+  
   useEffect(()=>{
     reportedPosts()
 

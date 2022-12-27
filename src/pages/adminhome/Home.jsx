@@ -10,7 +10,7 @@ export default function Adminhome() {
     <div>
       <AdminTopbar/>
       <Stack direction='row' spacing={2} justifyContent='space-between'>
-      <AdminSidebar/>
+      {/* <AdminSidebar/> */}
       <AdminFeed />
       </Stack>
     </div>

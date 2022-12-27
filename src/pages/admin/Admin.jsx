@@ -4,7 +4,6 @@ import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from "react-redux";
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material'
-import { DateRange } from '@mui/icons-material';
 
 
 export default function Admin() {
@@ -45,7 +44,7 @@ export default function Admin() {
                 <form onSubmit={formik.handleSubmit}>
                     <TextField fullWidth size='small' variant='standard' onChange={formik.handleChange} label="Email" name='email' placeholder='Enter your Email' value={formik.values.email} />
                     <TextField fullWidth size='small' variant='standard' onChange={formik.handleChange} label="Password" name='password1' type='password' placeholder='Enter your Password' value={formik.values.password1} />
-                    <Button type='submit' sx={{ marginTop: '25px' }} fullWidth variant='contained' color='primary' >Sign UP</Button>
+                    <Button type='submit' sx={{ marginTop: '25px' }} fullWidth variant='contained' color='primary' >Sign IN</Button>
                 </form>
             </Paper>
 

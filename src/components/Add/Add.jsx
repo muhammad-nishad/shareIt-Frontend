@@ -9,6 +9,7 @@ import { useReducer } from "react"
 import { postsReducer } from '../../functions/reducers';
 import { useSelector } from 'react-redux'
 import { useEffect } from 'react'
+import { Audio, FallingLines } from "react-loader-spinner";
 
 
 const StyledModal = styled(Modal)({
@@ -27,30 +28,39 @@ const UserBox = styled(Box)({
 function Add({ dispatch }) {
     const { user } = useSelector(state => ({ ...state }))
     const { token } = user
+    const [audio, setAudio] = useState(false)
 
-    const upload=()=>{
-        if(imageSelected){
+    const upload = () => {
+        if (imageSelected) {
             uploadImage()
-        }else{
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/posts`, {  description }, { headers: { token: token } }).then(({ data }) => {
-                console.log(data, 'responseof post addd');
-                dispatch({
-                    type: "NEW_POST",
-                    payload: data
-                })
-                setOpen(false)
-            })
+        } else {
+            if(description){
 
+                console.log(description,'body');
+                
+                axios.post(`${process.env.REACT_APP_BACKEND_URL}/posts`, { description }, { headers: { token: token } }).then(({ data }) => {
+                    console.log(data, 'responseof post addd');
+                    dispatch({
+                        type: "NEW_POST",
+                        payload: data
+                    })
+                    setOpen(false)
+                    
+                })
+                
+            }else{
+                console.log('type anything');
+            }
         }
     }
     const uploadImage = () => {
-    
+
         // alert(URL.createObjectURL(imageSelected))
         const formData = new FormData()
         formData.append("file", imageSelected)
         formData.append("upload_preset", "kacy6ucl")
         try {
-           
+
             axios.post("https://api.cloudinary.com/v1_1/dl0nkbe8b/image/upload", formData).then((response) => {
                 const img = response.data.url
                 axios.post(`${process.env.REACT_APP_BACKEND_URL}/posts`, { img, description }, { headers: { token: token } }).then(({ data }) => {
@@ -60,6 +70,7 @@ function Add({ dispatch }) {
                         payload: data
                     })
                     setOpen(false)
+                    setAudio(false)
                 })
             })
 
@@ -96,7 +107,8 @@ function Add({ dispatch }) {
 
             <StyledModal
                 open={open}
-                onClose={e => {setOpen(false)
+                onClose={e => {
+                    setOpen(false)
                     setFile(false)
                 }}
                 aria-labelledby="modal-modal-title"
@@ -129,14 +141,16 @@ function Add({ dispatch }) {
                             setDescription(e.target.value);
                         }}
                     />
-                   
+
                     <Stack direction='row' gap={1} marginTop={2} mb={3}>
                         <input
                             style={{ display: 'none' }}
                             type="file"
                             onChange={(e) => {
                                 setImageSelected(e.target.files[0])
+                                
                                 setFile(URL.createObjectURL(e.target.files[0]));
+                                
                             }}
                             id="image_input"
                         />
@@ -146,7 +160,16 @@ function Add({ dispatch }) {
                         </label>
                     </Stack>
                     <ButtonGroup fullWidth variant="contained" aria-label="outlined primary button group">
-                        <Button onClick={upload} >Post</Button>
+                        {/* <Button onClick={upload} >Post</Button> */}
+                        <Button onClick={() => {
+                            upload()
+                            // setAudio(true)
+                        }} >
+                            Post</Button>
+                        {/* {audio ? <FallingLines color="red"
+                            width="50"
+                            visible={true}
+                            ariaLabel='falling-lines-loading' /> : null} */}
                     </ButtonGroup>
                 </Box>
             </StyledModal>

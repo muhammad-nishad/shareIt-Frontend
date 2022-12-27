@@ -186,7 +186,7 @@ export default function Post({ post, savedPost, profile, feed }) {
     const handleClosee = () => setOpen(false);
     return (
         <>
-            <Card sx={{ marginY: "25px", maxWidth: "30rem", width: '-webkit-fill-available', marginLeft: '0', boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.09)", cursor: "pointer" }}>
+            <Card sx={{ marginY: "25px", maxWidth: "30rem", width: '-webkit-fill-available', marginLeft: '0', boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.09)", cursor: "pointer",borderRadius:'10px'}}>
                 <CardHeader
 
                     avatar={

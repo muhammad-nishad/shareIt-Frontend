@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import Cookies from "js-cookie";
 import { Link, useNavigate } from "react-router-dom";
 
+
 const loginInfos = {
   email: "",
   password: "",
@@ -30,6 +31,7 @@ export default function LoginForm({ setVisible }) {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false)
+  
 
   const loginSubmit = async () => {
     try {
@@ -37,16 +39,22 @@ export default function LoginForm({ setVisible }) {
       const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
         email,
         password,
-      })
+      })  
+   
       Cookies.set("user", JSON.stringify(data.user))
+  
       dispatch({ type: "LOGIN", payload: data.user});
       navigate("/")
+      // const toast=()=>{
+      //   console.log('clicked')
+      // }
 
     } catch (error) {
       setLoading(false);
       setError(error.response.data.message);
     }
   }
+
 
   return (
     <div className="login_wrap">
@@ -82,7 +90,7 @@ export default function LoginForm({ setVisible }) {
                   placeholder="Password"
                   onChange={handleLoginChange}
                 />
-                <button type="submit" className="blue_btn">
+                <button  type="submit" className="blue_btn">
                   Log In
                 </button>
               </Form>
