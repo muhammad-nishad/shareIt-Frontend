@@ -14,7 +14,7 @@ function Sidebar() {
   const navigate = useNavigate()
   return (
 
-    <Box flex={1} p={1} sx={{ display: { xs: 'none', md: 'block',backgroundColor:"white" } }} >
+    <Box flex={1} p={1} sx={{ display: { xs: 'none', md: 'block', backgroundColor: "white" } }} >
       <Box position='fixed'>
 
         <List  >
@@ -51,10 +51,10 @@ function Sidebar() {
           </ListItem> */}
 
           <ListItem disablePadding>
-            <ListItemButton component='a' href='#' onClick={(e)=>{
+            <ListItemButton component='a' href='#' onClick={(e) => {
               e.preventDefault()
               navigate("/chat")
-              
+
             }} >
               <ListItemIcon>
                 <ChatBubbleOutlinedIcon />
@@ -62,8 +62,8 @@ function Sidebar() {
               <ListItemText primary="Chats" />
             </ListItemButton >
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton component='a' onClick={(e)=>{
+          {/* <ListItem disablePadding>
+            <ListItemButton component='a' onClick={(e) => {
               e.preventDefault()
               navigate("/savedPosts")
             }}>
@@ -72,7 +72,7 @@ function Sidebar() {
               </ListItemIcon>
               <ListItemText primary="Saved Posts" />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
 
           {/* <ListItem disablePadding>
             <ListItemButton component='a' href='#'>

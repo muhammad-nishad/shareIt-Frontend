@@ -128,13 +128,13 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
                                             </div>
 
                                         </div>
-                                        <hr />
-                                        <div style={{ display: "flex", justifyContent: "center" }} >
+                                        {/* <hr /> */}
+                                        {/* <div style={{ display: "flex", justifyContent: "center" }} >
                                             <button style={{ color: 'red', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} >Remove Current Photo</button>
-                                        </div>
+                                        </div> */}
                                         <hr />
                                         <div style={{ display: "flex", justifyContent: "center" }} >
-                                            <button onClick={handleClose}  style={{ height: "34px", color: 'black', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} >Cancel</button>
+                                            <button onClick={handleClose}  style={{ height: "34px", color: 'red', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} >Cancel</button>
                                         </div>
                                     </div>
                                 </Box>

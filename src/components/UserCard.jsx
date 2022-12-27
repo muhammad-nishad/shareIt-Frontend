@@ -27,7 +27,9 @@ function UserCard({ data, type }) {
         })
     }
     return (
+        <div style={{maxWidth:"500px"}}>
         <div style={{ width: "10vw", display: "flex", alignItems: "center", flexDirection: "center", paddingTop: 25, paddingLeft: 30, gap: 12 }}>
+            
             <div style={{ border: "0px solid black", display: "flex", alignItems: "center", flexDirection: "column", boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2) 0 6px 20px 0 rgba(0, 0, 0, 0.19)" }}>
 
                 {
@@ -42,6 +44,7 @@ function UserCard({ data, type }) {
                     }
                 </div>
                 {
+                    
                     follow === "follow" ?
                         <Button style={{ display: "flex", paddingTop: 10 }} onClick={() => {
                             followuser(data._id);
@@ -57,6 +60,7 @@ function UserCard({ data, type }) {
                             : ""
                 }
             </div>
+        </div>
         </div>
     )
 }

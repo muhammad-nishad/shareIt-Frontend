@@ -316,7 +316,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                     >
                         <CommentOutlinedIcon />
                     </ExpandMore>
-                    {save ? <BookmarkOutlinedIcon onClick={savePost} /> : <Save onClick={savePost} />}
+                    {/* {save ? <BookmarkOutlinedIcon onClick={savePost} /> : <Save onClick={savePost} />} */}
 
 
 
@@ -334,19 +334,22 @@ export default function Post({ post, savedPost, profile, feed }) {
                                                         <img onClick={() => {
                                                             Navigate(`/profile/${comment.commentBy._id}`)
                                                             console.log(comment.commentBy._id, 'userid');
-                                                        }} style={{ width: "20px", borderRadius: "10px" }}
+                                                        }} style={{ width: "30px", borderRadius: "50%",height:"30px",objectFit:"cover"}}
                                                             src={comment && comment.commentBy.profilePicture ? comment.commentBy.profilePicture : '/icons/blankprofile.webp'} />
-                                                            <h5>
+                                                            <div  style={{display:"flex",flexDirection:"column"}} >
 
-                                                        &nbsp;&nbsp;  {comment.commentBy.first_name}&nbsp;&nbsp;&nbsp;
+                                                            <h5 style={{paddingLeft:"15px",paddingTop:"5px"}} >
+
+                                                         {comment.commentBy.first_name}
                                                             </h5>
                                                   
 
-                                                        <p key={comment.comment} >{comment.comment}</p>
+                                                        <p style={{fontSize:"14px",paddingLeft:"10px"}}  key={comment.comment} >{comment.comment}</p>
+                                                            </div>
                                                         
                                                         {/* {<Moment fromNow interval={30}  >{comment.createdAt}</Moment>} */}
-                                                        <div style={{ display: 'flex', justifyContent: 'flex-end',width:"21rem" }}>
-                                                            {user._id == comment?.commentBy?._id ? <DeleteIcon onClick={() => {
+                                                        <div style={{ display: 'flex', justifyContent: 'flex-end',width:"21rem"}}>
+                                                            {user._id == comment?.commentBy?._id ? <DeleteIcon sx={{fontSize:'small'}} onClick={() => {
                                                                 deleteComment(comment._id)
 
                                                             }} /> : null}

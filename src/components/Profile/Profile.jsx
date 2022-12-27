@@ -15,7 +15,7 @@ export default function Profile({id , own}) {
   const [profile,setProfile]=useState()
   // console.log(posts, 'posts');
   const { user } = useSelector(state => ({ ...state }))
-  // console.log(user, 'userrr');
+  console.log(user, 'userrr');
   const refresh = useSelector((state) => state.user.refresh)
   const token = user?.token
 
