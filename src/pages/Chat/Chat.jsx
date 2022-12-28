@@ -29,7 +29,7 @@ export default function Chat() {
 
 
     useEffect(() => {
-        socket.current = io('https://server.share-it.social')
+        socket.current = io('https://server.share-it.social/socket')
         // socket.current=io('http://localhost:8800')
         socket.current.emit("new-user-add", user._id)
         socket.current.on('get-users', (users) => {
