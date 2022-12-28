@@ -69,6 +69,8 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
         e.preventDefault();
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateUserDetails`, { editData }, { headers: { token: token } }).then((data) => {
             console.log(data, 'getuserprofile');
+            handleClose2()
+            dispatch({ type: 'REFRESH' })
         })
     }
 

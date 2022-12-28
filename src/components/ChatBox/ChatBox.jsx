@@ -71,7 +71,6 @@ export default function ChatBox({ chat, currentUser, setSendMessage, receieveMes
         //send message to database
         try {
             const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/message`, { message })
-            console.log(data)
             setMessages([...messages, data])
             setNewMessage(" ")
         } catch (error) {
@@ -79,7 +78,7 @@ export default function ChatBox({ chat, currentUser, setSendMessage, receieveMes
         }
         //send message to socket server
         const receiverId = chat.members.find((id) => id !== currentUser)
-        setSendMessage({ ...message, receiverId })
+        setSendMessage({ ...message, receiverId,currentUser })
     }
     return (
         <>
