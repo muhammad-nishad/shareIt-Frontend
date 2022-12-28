@@ -94,13 +94,14 @@ export default function RegisterForm({ setVisible }) {
         bDay,
         gender,
       });
-      console.log(data, 'data');
+      // console.log(data.token, 'signup');
+      console.log(data.message,'signup');
       setError("");
       setSuccess(data.message);
       const { message, ...rest } = data;
       setTimeout(() => {
-        dispatch({ type: "LOGIN", payload: rest });
-        Cookies.set("user", JSON.stringify(rest))
+        dispatch({ type: "LOGIN", payload: data.user });
+        Cookies.set("user", JSON.stringify(data.user))
         navigate("/")
       }, 2000);
     } catch (error) {

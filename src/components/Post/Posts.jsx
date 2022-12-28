@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 
 function Posts({ posts, dispatch }) {
   const { user } = useSelector(state => ({ ...state }))
+  console.log(user,'reudx');
   const refresh = useSelector((state) => state.user.refresh)
   useEffect(() => {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getposts`, { headers: { token: user?.token } }).then(({ data }) => {
