@@ -193,7 +193,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                         <Avatar onClick={() => {
                             Navigate(`/profile/${post.userid._id}`)
                         }} aria-label="recipe">
-                            <img src={feed ? post.userid.profilePicture : profile ? profile.profilePicture : 'icons/blankprofile.webp'} style={{ width: "40px" }} />
+                            <img src={feed ? post?.userid?.profilePicture : profile ? profile?.profilePicture : 'icons/blankprofile.webp'} style={{ width: "40px" }} />
                         </Avatar>
 
                     }
