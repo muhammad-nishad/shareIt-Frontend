@@ -43,6 +43,7 @@ const ExpandMore = styled((props) => {
 
 
 export default function Post({ post, savedPost, profile, feed }) {
+    console.log(post, 'post');
     const [commentCount, setCommentCount] = useState(0)
     const { user } = useSelector(state => ({ ...state }))
     const token = user?.token
@@ -186,7 +187,7 @@ export default function Post({ post, savedPost, profile, feed }) {
     const handleClosee = () => setOpen(false);
     return (
         <>
-            <Card sx={{ marginY: "25px", maxWidth: "30rem", width: '-webkit-fill-available', marginLeft: '0', boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.09)", cursor: "pointer",borderRadius:'10px'}}>
+            <Card sx={{ marginY: "25px", maxWidth: "30rem", width: '-webkit-fill-available', marginLeft: '0', boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.09)", cursor: "pointer", borderRadius: '10px' }}>
                 <CardHeader
 
                     avatar={
@@ -220,6 +221,11 @@ export default function Post({ post, savedPost, profile, feed }) {
                                 <div style={{ display: "flex", justifyContent: "center" }} >
 
                                     <button style={{ color: 'red', borderRadius: "7px", cursor: "pointer", border: "none", backgroundColor: "white" }} onClick={deletePost}  >Delete</button>
+                                </div>
+                                <hr style={{ marginTop: "7px" }} />
+                                <div style={{ display: "flex", justifyContent: "center" }} >
+
+                                    <button style={{ color: 'black', borderRadius: "7px", cursor: "pointer", border: "none", backgroundColor: "white",padding:"9px" }}  >Edit</button>
                                 </div>
                                 <hr style={{ marginTop: "7px" }} />
                                 <div style={{ display: "flex", justifyContent: "center" }} >
@@ -334,22 +340,23 @@ export default function Post({ post, savedPost, profile, feed }) {
                                                         <img onClick={() => {
                                                             Navigate(`/profile/${comment.commentBy._id}`)
                                                             console.log(comment.commentBy._id, 'userid');
-                                                        }} style={{ width: "30px", borderRadius: "50%",height:"30px",objectFit:"cover"}}
+                                                        }} style={{ width: "30px", borderRadius: "50%", height: "30px", objectFit: "cover" }}
                                                             src={comment && comment.commentBy.profilePicture ? comment.commentBy.profilePicture : '/icons/blankprofile.webp'} />
-                                                            <div  style={{display:"flex",flexDirection:"column"}} >
+                                                        <div style={{ display: "flex", flexDirection: "column" }} >
 
-                                                            <h5 style={{paddingLeft:"15px",paddingTop:"5px"}} >
+                                                            <h5 style={{ paddingLeft: "15px", paddingTop: "5px" }} >
 
-                                                         {comment.commentBy.first_name}
+                                                                {comment.commentBy.first_name}
                                                             </h5>
-                                                  
 
-                                                        <p style={{fontSize:"14px",paddingLeft:"10px"}}  key={comment.comment} >{comment.comment}</p>
-                                                            </div>
-                                                        
-                                                        {/* {<Moment fromNow interval={30}  >{comment.createdAt}</Moment>} */}
-                                                        <div style={{ display: 'flex', justifyContent: 'flex-end',width:"21rem"}}>
-                                                            {user._id == comment?.commentBy?._id ? <DeleteIcon sx={{fontSize:'small'}} onClick={() => {
+
+                                                            <p style={{ fontSize: "14px", paddingLeft: "10px" }} key={comment.comment} >{comment.comment}</p>
+                                                        </div>
+
+
+                                                        <div style={{ display: 'flex', justifyContent: 'flex-end', width: "21rem", fontSize: '9px' }}>
+                                                            {<Moment fromNow interval={30}  >{comment.createdAt}</Moment>}
+                                                            {user._id == comment?.commentBy?._id ? <DeleteIcon sx={{ fontSize: 'small' }} onClick={() => {
                                                                 deleteComment(comment._id)
 
                                                             }} /> : null}

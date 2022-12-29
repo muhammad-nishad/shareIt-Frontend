@@ -4,6 +4,7 @@ import { useFormik } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from "react-redux";
 import { Avatar, Button, Grid, Paper, TextField, Typography } from '@mui/material'
+import { StarRate } from '@mui/icons-material';
 
 
 export default function Admin() {
@@ -16,7 +17,7 @@ export default function Admin() {
         },
         onSubmit: values => {
             axios.post(`${process.env.REACT_APP_BACKEND_URL}/authorizer/login`, values).then(({data}) => {
-                console.log(data,'adminlogin');
+                // console.log(data,'adminlogin');
                 localStorage.setItem('admin',JSON.stringify(data.admin))
                 dispatch({type:"ADMIN_LOGIN",payload:data.admin})
                 if (data.admin) {
