@@ -77,6 +77,7 @@ export default function Chat() {
                 </div>
                 <div className='Right-side-chat'>
                     {/* chat body */}
+                    {/* forcomment */}
                     <ChatBox chat={currentChat} currentUser={user._id}
                         setSendMessage={setSendMessage} receieveMessage={receieveMessage}
                     />
