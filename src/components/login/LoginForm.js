@@ -40,7 +40,8 @@ export default function LoginForm({ setVisible }) {
       const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`, {
         email,
         password,
-      })  
+      }) 
+      console.log(data.user,'datauser'); 
    
       Cookies.set("user", JSON.stringify(data.user))
   

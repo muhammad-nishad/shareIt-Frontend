@@ -298,7 +298,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                         {editPost ?
                             <>
                                 <input
-                                    style={{ width: '50%' }}
+                                    style={{ width: '45%',height:"20px" }}
                                     type='text'
 
                                     value={description}
@@ -306,9 +306,12 @@ export default function Post({ post, savedPost, profile, feed }) {
                                         console.log(e.target.value, 'e');
                                         setDescription(e.target.value);
                                     }} />
+                                    <div>
+
                                 <button style={{ color: "#47afff", cursor: "pointer", width: "0", border: "aliceblue" }} type='submit' onClick={() => {
                                     updatePost(post._id)
                                 }} >Post</button>
+                                </div>
 
                             </>
                             : null
@@ -374,7 +377,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                                                             <p style={{ fontSize: "14px", paddingLeft: "10px" }} key={comment.comment} >{comment.comment}</p>
                                                         </div>
                                                         <div style={{ display: 'flex', justifyContent: 'flex-end', width: "21rem", fontSize: '9px' }}>
-                                                            {/* {<Moment fromNow interval={30}>{comment.commentAt}</Moment>} */}
+                                                            {<Moment fromNow interval={30}>{comment.commentAt}</Moment>}
 
                                                             {user._id == comment?.commentBy?._id ? <DeleteIcon sx={{ fontSize: 'small' }} onClick={() => {
                                                                 deleteComment(comment._id)

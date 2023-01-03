@@ -27,7 +27,6 @@ const style = {
 
 export default function Topbar({ id, profile, post, following, setFollowing }) {
     const { user } = useSelector(state => ({ ...state }))
-    console.log(following,'following');
     const navigate = useNavigate()
     let tokenData = Cookies.get('user')
     tokenData = JSON.parse(tokenData)
@@ -50,10 +49,13 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
         formData.append("upload_preset", "kacy6ucl")
         axios.post("https://api.cloudinary.com/v1_1/dl0nkbe8b/image/upload", formData).then((response) => {
             const img = response.data.url
-            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProfilePicture`, { img }, { headers: { token: token } }).then((data) => {
+            axios.post(`${process.env.REACT_APP_BACKEND_URL}/addProfilePicture`, { img }, { headers: { token: token } }).then(({data}) => {
+                console.log(data.user, 'addingprofile5555555555555555');
+                Cookies.remove('user')
+                Cookies.set("user", JSON.stringify(data.user))
+                dispatch({ type: 'ADD_PROFILE',payload:data.user })
                 dispatch({ type:'REFRESH' })
                 handleClose()
-                console.log(data, 'data');
             })
 
         })
@@ -72,11 +74,20 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
         })
     }
 
+    const removeImg=()=>{
+        axios.patch(`${process.env.REACT_APP_BACKEND_URL}/removeProfile`,{},{ headers: { token: token } }).then(({data})=>{
+            handleClose()
+            Cookies.set("user", JSON.stringify(data.user))
+            dispatch({ type: 'ADD_PROFILE',payload:data.user })
+            dispatch({ type: 'REFRESH' })
+        })
+    }
+
 
     const onSubmit = (e) => {
         e.preventDefault();
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/updateUserDetails`, { editData }, { headers: { token: token } }).then((data) => {
-            console.log(data, 'getuserprofile');
+            // console.log(data, 'getuserprofile');
             handleClose2()
             dispatch({ type: 'REFRESH' })
         })
@@ -138,10 +149,10 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
                                             </div>
 
                                         </div>
-                                        {/* <hr /> */}
-                                        {/* <div style={{ display: "flex", justifyContent: "center" }} >
-                                            <button style={{ color: 'red', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} >Remove Current Photo</button>
-                                        </div> */}
+                                        <hr />
+                                        <div style={{ display: "flex", justifyContent: "center" }} >
+                                            <button style={{ color: 'red', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} onClick={removeImg}  >Remove Current Photo</button>
+                                        </div>
                                         <hr />
                                         <div style={{ display: "flex", justifyContent: "center" }} >
                                             <button onClick={handleClose}  style={{ height: "34px", color: 'red', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} >Cancel</button>

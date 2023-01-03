@@ -3,7 +3,6 @@ export function userReducer(state = { refresh: false }, action) {
     state = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null
     switch (action.type) {
         case "LOGIN":
-            console.log(action.payload, 'actionnn');
             return action.payload;
         case "LOGOUT":
             return null;
@@ -28,6 +27,11 @@ export function userReducer(state = { refresh: false }, action) {
             let result = state?.savedPosts.filter((id) => id !== action.payload)
             state.savedPosts = result
             return { ...state }
+
+        case 'ADD_PROFILE':
+            return action.payload;
+            // console.log(state,'state');
+
 
         default:
             return { ...state }

@@ -83,12 +83,6 @@ function Navbar({ color }) {
                     : ""
                 }
                 <Icons>
-                    {/* <Badge badgeContent={4} color="error">
-                        <MailIcon onClick={Navigate('/chat')} />
-                    </Badge> */}
-                    {/* <Badge badgeContent={4} color="error">
-                        <NotificationsIcon />
-                    </Badge> */}
                     {
                         !user?.profilePicture? <Avatar  onClick={e => setOpen(true)}  alt="B" src='icons/blankprofile.webp' sx={{ width: 30, height: 30 ,cursor:"pointer"}}/> :
                         
