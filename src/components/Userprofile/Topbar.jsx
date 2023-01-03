@@ -27,6 +27,7 @@ const style = {
 
 export default function Topbar({ id, profile, post, following, setFollowing }) {
     const { user } = useSelector(state => ({ ...state }))
+    console.log(following,'following');
     const navigate = useNavigate()
     let tokenData = Cookies.get('user')
     tokenData = JSON.parse(tokenData)
@@ -64,6 +65,13 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
             dispatch({ type: 'REFRESH' })
         })
     }
+    const unFollowUser = () => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/unfollow`, { userid: id }, { headers: { token: token } }).then((data) => {
+            setFollowing(prev => !prev)
+            dispatch({ type: 'REFRESH' })
+        })
+    }
+
 
     const onSubmit = (e) => {
         e.preventDefault();
@@ -161,7 +169,7 @@ export default function Topbar({ id, profile, post, following, setFollowing }) {
                                             <button onClick={() => {
                                                 createChat(user._id, id)
                                             }} style={{ backgroundColor: "white", color: "black", borderRadius: "7px", height: '34px', border: '1px solid', cursor: "pointer", width: "90px", marginLeft: "10px" }}>message</button>
-                                            <button onClick={followUser} style={{ backgroundColor: "#47afff", color: "white", borderRadius: "7px", height: '34px', border: '1px solid', cursor: "pointer", width: "90px", marginLeft: "10px" }}  >unfollow</button>
+                                            <button onClick={unFollowUser} style={{ backgroundColor: "#47afff", color: "white", borderRadius: "7px", height: '34px', border: '1px solid', cursor: "pointer", width: "90px", marginLeft: "10px" }}  >unfollow</button>
                                         </>
 
                                 }

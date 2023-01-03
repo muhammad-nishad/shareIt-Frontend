@@ -5,7 +5,9 @@ import Profile from '../../components/Profile/Profile'
 
 export default function ProfilePage() {
   const { user } = useSelector(state => ({ ...state }))
+  console.log(user._id,'reduxid');
   const { id } = useParams();
+  console.log(id,'id');
   let own = false;
   if (id && id === user._id) {
     own = true;

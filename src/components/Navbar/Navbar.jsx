@@ -40,7 +40,7 @@ function Navbar({ color }) {
     const [showSearch, setShowSearch] = useState(false)
     const [searchUser, setSearchUser] = useState([])
     const {user}=useSelector(state=>({...state}))
-    console.log(user,'usrfrom redux');
+    // console.log(user,'usrfrom redux');
     const dispatch = useDispatch()
     const Navigate = useNavigate()
     const [open, setOpen] = useState(false)

@@ -15,13 +15,12 @@ export default function Profile({id , own}) {
   const [profile,setProfile]=useState()
   // console.log(posts, 'posts');
   const { user } = useSelector(state => ({ ...state }))
-  console.log(user, 'userrr');
   const refresh = useSelector((state) => state.user.refresh)
   const token = user?.token
 
   const getUserProfile = () => {
     axios.get(`${process.env.REACT_APP_BACKEND_URL}/getUserProfile/${id ? id : user._id}`, { headers: { token: token } }).then(({ data }) => {
-      console.log(data, 'getuserprofile');
+      console.log(data.following,'following');
       // Cookies.set("user",JSON.stringify(data.user))
       dispatch({ type:'REFRESH' })
       setProfile(data.user)
@@ -30,9 +29,7 @@ export default function Profile({id , own}) {
         type: "POSTS_SUCCESS",
         payload: data.post
       })
-      if(!own){
-        setFollowing(data.following)
-      }
+      setFollowing(data.following)
     }).catch(err => {
       console.log(err, 'catch block of axios');
     })
@@ -40,10 +37,12 @@ export default function Profile({id , own}) {
   }
   useEffect(() => {
     getUserProfile()
-
-
-
   }, [refresh])
+  useEffect(() => {
+    console.log(following)
+  }, [following])
+
+
   return (
     <>
       <Navbar />
