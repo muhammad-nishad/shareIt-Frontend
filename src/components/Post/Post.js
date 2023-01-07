@@ -46,13 +46,13 @@ export default function Post({ post, savedPost, profile, feed }) {
     const [commentCount, setCommentCount] = useState(0)
     const { user } = useSelector(state => ({ ...state }))
     const token = user?.token
-    console.log(token, 'token');
     const refresh = useSelector((state) => state.user.refresh)
     const [likes, setLikes] = useState(false)
     const [save, setSave] = useState(false)
     const [editPost, setEditPost] = useState(false)
     const [description, setDescription] = useState(post?.description)
     const dispatch = useDispatch()
+    const Navigate = useNavigate()
     //menu
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
@@ -62,10 +62,6 @@ export default function Post({ post, savedPost, profile, feed }) {
     const handleClose = () => {
         setAnchorEl(null);
     };
-
-    const Navigate = useNavigate()
-
-
 
     useEffect(() => {
         if (post?.likes.includes(user?._id)) {
@@ -83,15 +79,6 @@ export default function Post({ post, savedPost, profile, feed }) {
             return acc
         }, 0))
     }, [post])
-
-    // useEffect(() => {
-    //     if (user?.savedPosts?.post === post?._id) {
-    //         setSave(true)
-
-    //     } else {
-    //         setSave(false)
-    //     }
-    // }, [post,user])
     useEffect(() => {
         setSave(false)
         user?.savedPosts?.map((current) => {
@@ -101,12 +88,6 @@ export default function Post({ post, savedPost, profile, feed }) {
         })
     }, [user])
 
-
-
-
-
-
-    //useselector
 
     const [expanded, setExpanded] = useState(false);
     const handleExpandClick = () => {
@@ -144,15 +125,20 @@ export default function Post({ post, savedPost, profile, feed }) {
     const savePost = () => {
         // setSave(true)
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/savedPost`, { postid: post._id, }, { headers: { token: userToken.token } }).then(({ data }) => {
-            console.log(data, 'responseofsavedpost');
-            if (data.type === "added") {
-                dispatch({ type: "SAVED_POST", payload: post._id })
-            } else if (data.type === "removed") {
-                dispatch({ type: "UNSAVE_POST", payload: post._id })
-            }
-
-
-            // setSave(true)
+            Cookies.remove('user')
+            Cookies.set("user", JSON.stringify(data.user))
+            dispatch({ type: 'ADD_PROFILE', payload: data.user })
+            dispatch({ type: 'REFRESH' })
+            setSave(true)
+        })
+    }
+    const unsavePost = () => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/unsavePost`, { postid: post._id, }, { headers: { token: userToken.token } }).then(({ data }) => {
+            console.log(data, 'unsavePost');
+            Cookies.remove('user')
+            Cookies.set("user", JSON.stringify(data.user))
+            dispatch({ type: 'ADD_PROFILE', payload: data.user })
+            dispatch({ type: 'REFRESH' })
         })
     }
     const deleteComment = (id) => {
@@ -165,36 +151,33 @@ export default function Post({ post, savedPost, profile, feed }) {
     const deletePost = () => {
         axios.post(`${process.env.REACT_APP_BACKEND_URL}/deletePost`, { postid: post._id }, { headers: { token: userToken.token } }).then(({ data }) => {
             setOpen(false);
-            // onClose={handleClose}
             dispatch({ type: 'REFRESH' })
         })
 
     }
     const updatePost = (id) => {
         console.log(description, 'description');
-        axios.post(`${process.env.REACT_APP_BACKEND_URL}/updatePost/${id}`, {data:description}, { headers: { token: userToken?.token } }).then((data) => {
+        axios.post(`${process.env.REACT_APP_BACKEND_URL}/updatePost/${id}`, { data: description }, { headers: { token: userToken?.token } }).then((data) => {
             console.log(data, 'data');
             dispatch({ type: 'REFRESH' })
             setEditPost(false)
-            
+
         })
     }
-
-
 
     const [openn, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClosee = () => setOpen(false);
+    console.log(savedPost, user._id, post?.userid)
     return (
         <>
             <Card sx={{ marginY: "25px", maxWidth: "30rem", width: '-webkit-fill-available', marginLeft: '0', boxShadow: "0px 0px 15px 1px rgba(0, 0, 0, 0.09)", cursor: "pointer", borderRadius: '10px' }}>
                 <CardHeader
-
                     avatar={
                         <Avatar onClick={() => {
                             Navigate(`/profile/${post.userid._id}`)
                         }} aria-label="recipe">
-                            <img src={feed ? post?.userid?.profilePicture : profile ? profile?.profilePicture : 'icons/blankprofile.webp'} style={{ width: "40px" }} />
+                            <img src={feed ? post?.userid?.profilePicture : profile ? profile?.profilePicture : savedPost ? user.profilePicture : 'icons/blankprofile.webp'} style={{ width: "40px" }} />
                         </Avatar>
 
                     }
@@ -216,8 +199,8 @@ export default function Post({ post, savedPost, profile, feed }) {
                 >
 
                     <Box sx={stylee}>
-                        {user?._id == post?.userid?._id ?
-                            <>
+                        {savedPost && user?._id == post?.userid || user?._id == post?.userid?._id ?
+                            (<>
                                 <div style={{ display: "flex", justifyContent: "center" }} >
 
                                     <button style={{ color: 'red', borderRadius: "7px", cursor: "pointer", border: "none", backgroundColor: "white" }} onClick={deletePost}  >Delete</button>
@@ -227,8 +210,8 @@ export default function Post({ post, savedPost, profile, feed }) {
 
                                     <button style={{ color: 'black', borderRadius: "7px", cursor: "pointer", border: "none", backgroundColor: "white", padding: "9px" }} onClick={() => {
                                         handleClose()
-                                        setEditPost(true)
-                                        console.log('clicked');
+                                        setEditPost(true);
+
                                         <input
                                             type='text' />
                                     }} >Edit</button>
@@ -238,7 +221,7 @@ export default function Post({ post, savedPost, profile, feed }) {
 
                                     <button style={{ height: "34px", color: 'black', borderRadius: "7px", cursor: "pointer", border: "1px", backgroundColor: "white" }} onClick={handleClose}  >cancel</button>
                                 </div>
-                            </>
+                            </>)
 
                             : (<>
                                 <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)" }}>
@@ -268,7 +251,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                                 <div style={{ display: "flex", flexDirection: "row-reverse", transform: "translateY(-21px)", cursor: "pointer" }}>
                                     <NavigateNextIcon onClick={() => {
                                         reportPost()
-                                        console.log('terrorism');
+
                                         swal(" Thanks for letting us know!", "Your feedback is sended. !", "error");
                                     }} />
                                 </div>
@@ -298,19 +281,18 @@ export default function Post({ post, savedPost, profile, feed }) {
                         {editPost ?
                             <>
                                 <input
-                                    style={{ width: '45%',height:"20px" }}
+                                    style={{ width: '45%', height: "20px" }}
                                     type='text'
 
                                     value={description}
                                     onChange={(e) => {
-                                        console.log(e.target.value, 'e');
                                         setDescription(e.target.value);
                                     }} />
-                                    <div>
+                                <div>
 
-                                <button style={{ color: "#47afff", cursor: "pointer", width: "0", border: "aliceblue" }} type='submit' onClick={() => {
-                                    updatePost(post._id)
-                                }} >Post</button>
+                                    <button style={{ color: "#47afff", cursor: "pointer", width: "0", border: "aliceblue" }} type='submit' onClick={() => {
+                                        updatePost(post._id)
+                                    }} >Post</button>
                                 </div>
 
                             </>
@@ -349,7 +331,7 @@ export default function Post({ post, savedPost, profile, feed }) {
                     >
                         <CommentOutlinedIcon />
                     </ExpandMore>
-                    {/* {save ? <BookmarkOutlinedIcon onClick={savePost} /> : <Save onClick={savePost} />} */}
+                    {save ? <BookmarkOutlinedIcon onClick={unsavePost} /> : <Save onClick={savePost} />}
 
 
 
@@ -362,26 +344,25 @@ export default function Post({ post, savedPost, profile, feed }) {
                                     post.comments.map((comment) => {
                                         if (!comment.commentDelete)
                                             return (
-                                                <>{
-                                                    // console.log(comment)
-                                                }
+                                                <>
                                                     <div style={{ display: 'flex' }} y>
                                                         <img onClick={() => {
                                                             Navigate(`/profile/${comment.commentBy._id}`)
                                                         }} style={{ width: "30px", borderRadius: "50%", height: "30px", objectFit: "cover" }}
-                                                            src={comment && comment.commentBy.profilePicture ? comment.commentBy.profilePicture : '/icons/blankprofile.webp'} />
+                                                            src={comment && comment.commentBy.profilePicture ? comment.commentBy.profilePicture : savedPost ? user.profilePicture : profile ? profile.profilePicture : '/icons/blankprofile.webp'} />
                                                         <div style={{ display: "flex", flexDirection: "column" }} >
                                                             <h5 style={{ paddingLeft: "15px", paddingTop: "5px" }} >
-                                                                {comment.commentBy.first_name}
+                                                                {feed ? comment.commentBy.first_name : savedPost ? user.first_name : profile ? profile?.first_name : ""}
                                                             </h5>
                                                             <p style={{ fontSize: "14px", paddingLeft: "10px" }} key={comment.comment} >{comment.comment}</p>
                                                         </div>
                                                         <div style={{ display: 'flex', justifyContent: 'flex-end', width: "21rem", fontSize: '9px' }}>
                                                             {<Moment fromNow interval={30}>{comment.commentAt}</Moment>}
 
-                                                            {user._id == comment?.commentBy?._id ? <DeleteIcon sx={{ fontSize: 'small' }} onClick={() => {
+                                                            {profile && profile._id == comment.commentBy || savedPost && user._id == comment.commentBy || user._id == comment?.commentBy?._id ? <DeleteIcon sx={{ fontSize: 'small' }} onClick={() => {
                                                                 deleteComment(comment._id)
                                                             }} /> : null}
+                                                            {console.log(comment.commentBy, 'comment')}
                                                         </div>
                                                     </div>
                                                 </>

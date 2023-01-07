@@ -62,7 +62,7 @@ function Sidebar() {
               <ListItemText primary="Chats" />
             </ListItemButton >
           </ListItem>
-          {/* <ListItem disablePadding>
+          <ListItem disablePadding>
             <ListItemButton component='a' onClick={(e) => {
               e.preventDefault()
               navigate("/savedPosts")
@@ -72,7 +72,7 @@ function Sidebar() {
               </ListItemIcon>
               <ListItemText primary="Saved Posts" />
             </ListItemButton>
-          </ListItem> */}
+          </ListItem>
 
           {/* <ListItem disablePadding>
             <ListItemButton component='a' href='#'>
