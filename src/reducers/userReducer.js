@@ -1,6 +1,6 @@
 import Cookies from "js-cookie"
 export function userReducer(state = { refresh: false }, action) {
-    state = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null
+    state = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : ""
     switch (action.type) {
         case "LOGIN":
             return action.payload;
