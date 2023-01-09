@@ -33,6 +33,7 @@ export default function Chat() {
         // socket.current=io('http://localhost:8800')
         socket.current.emit("new-user-add", user._id)
         socket.current.on('get-users', (users) => {
+            console.log(users,"both users");
             setOnlineUsers(users)
 
         })
@@ -43,10 +44,10 @@ export default function Chat() {
     useEffect(() => {
         socket.current.on("receive-message", (data) => {
             setReceieveMessage(data)
-
+       console.log(data,"lasf asdfasdf asdfsdf");
         })
 
-    }, [])
+    }, [receieveMessage])
 
     useEffect(() => {
         const getChats = async () => {

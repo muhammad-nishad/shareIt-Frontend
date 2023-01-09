@@ -23,7 +23,7 @@ export default function Conversation({ data, currentUserId }) {
 
 
         }
-        getUserData()
+      userId &&  getUserData()
 
     }, [])
     return (

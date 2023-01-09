@@ -20,7 +20,7 @@ export default function ChatBox({ chat, currentUser, setSendMessage, receieveMes
 
     }, [receieveMessage])
 
-
+    
     //fetching data for header
     useEffect(() => {
         const userId = chat?.members?.find((id) => id !== currentUser)
@@ -68,6 +68,7 @@ export default function ChatBox({ chat, currentUser, setSendMessage, receieveMes
             text: newMessage,
             chatId: chat._id,
         }
+        console.log(message,"sdfdsfd")
         //send message to database
         try {
             const { data } = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/message`, { message })
@@ -77,8 +78,8 @@ export default function ChatBox({ chat, currentUser, setSendMessage, receieveMes
             console.log(error);
         }
         //send message to socket server
-        const receiverId = chat.members.find((id) => id !== currentUser)
-        setSendMessage({ ...message, receiverId,currentUser })
+        const receiverId = chat?.members?.find((id) => id !== currentUser)
+        setSendMessage({ ...message, receiverId, currentUser })
     }
     return (
         <>
